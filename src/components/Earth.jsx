@@ -10,7 +10,7 @@ const Earth = () => {
   // Spin the Earth continuously
   useFrame(() => {
     if (earthRef.current) {
-      earthRef.current.rotation.y += 0.002;
+      earthRef.current.rotation.y += 0.0008;
     }
   });
 
