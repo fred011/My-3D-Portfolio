@@ -138,7 +138,7 @@ export default function Navigation() {
                   e.preventDefault();
                   handleNavClick(item.href);
                 }}
-                className=" py-3 px-3 text-white/80 hover:text-cyan-400 hover:bg-white/5 transition-all duration-300 flex items-center space-x-3 rounded-lg group"
+                className=" py-3 gap-2 px-3 text-white/80 hover:text-cyan-400 hover:bg-white/5 transition-all duration-300 flex items-center space-x-3 rounded-lg group"
                 style={{
                   animationDelay: `${index * 50}ms`,
                   transform: isOpen ? "translateY(0)" : "translateY(-10px)",
