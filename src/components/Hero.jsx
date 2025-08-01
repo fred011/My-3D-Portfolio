@@ -181,7 +181,7 @@ export default function Hero() {
               <h1 className="text-base xs:text-lg sm:text-xl md:text-2xl font-medium text-cyan-400 animate-pulse">
                 Hello, I'm
               </h1>
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+              <h2 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
                 Ferdinand
               </h2>
               <h3 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
@@ -189,11 +189,11 @@ export default function Hero() {
               </h3>
             </div>
 
-            <div className="space-y-3 md:space-y-4">
+            <div className="space-y-3 md:space-y-4 mt-2">
               <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/90 font-medium">
                 Full Stack Developer
               </p>
-              <p className="text-sm xs:text-base md:text-lg text-white/70 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              <p className="text-sm xs:text-base md:text-lg mt-1 text-white/70 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                 Passionate about building modern web applications using the MERN
                 stack. Currently learning and growing as a software developer,
                 with expertise in{" "}

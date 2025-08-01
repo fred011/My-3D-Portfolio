@@ -43,7 +43,7 @@ const EarthCanvas = () => {
         {/* Allow drag in all directions and zoom */}
         <OrbitControls
           autoRotate={true}
-          enableZoom={false}
+          enableZoom={true}
           enablePan={false}
           maxPolarAngle={Math.PI}
           minPolarAngle={0}
