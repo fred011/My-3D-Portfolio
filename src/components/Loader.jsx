@@ -31,39 +31,6 @@ const CanvasLoader = () => {
         }}
       />
 
-      {/* Progress Bar */}
-      <div
-        style={{
-          width: "200px",
-          height: "8px",
-          backgroundColor: "#333",
-          borderRadius: "4px",
-          overflow: "hidden",
-          marginTop: "20px",
-        }}
-      >
-        <div
-          style={{
-            width: `${progress}%`,
-            height: "100%",
-            background: "linear-gradient(90deg, #00BFFF, #1E90FF)",
-            transition: "width 0.3s ease-in-out",
-          }}
-        />
-      </div>
-
-      {/* Progress Text */}
-      <p
-        style={{
-          fontSize: "14px",
-          color: "#f1f1f1",
-          fontWeight: 600,
-          marginTop: "12px",
-        }}
-      >
-        {progress.toFixed(0)}%
-      </p>
-
       {/* Inline Keyframes */}
       <style>
         {`
