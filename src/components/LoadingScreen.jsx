@@ -74,7 +74,7 @@ export default function LoadingScreen() {
           </div>
 
           <h1 className="text-3xl md:text-4xl font-light text-white mb-2">
-            Ferdinand
+            Ferdinand's
           </h1>
           <p className="text-slate-400 text-sm uppercase tracking-wider font-medium">
             Portfolio
