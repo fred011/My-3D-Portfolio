@@ -189,7 +189,7 @@ export default function Hero() {
               </h3>
             </div>
 
-            <div className="space-y-3 md:space-y-4 mt-2">
+            <div className="space-y-3 md:space-y-4 mt-4">
               <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/90 font-medium">
                 Full Stack Developer
               </p>
