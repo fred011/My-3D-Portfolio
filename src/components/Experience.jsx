@@ -1,5 +1,11 @@
 import { useState, useRef } from "react";
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import {
   Calendar,
   MapPin,
@@ -15,7 +21,7 @@ export default function Experience() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
@@ -28,16 +34,16 @@ export default function Experience() {
       opacity: 1,
       transition: {
         delayChildren: 0.3,
-        staggerChildren: 0.3
-      }
-    }
+        staggerChildren: 0.3,
+      },
+    },
   };
 
   const timelineItemVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       x: -100,
-      scale: 0.8
+      scale: 0.8,
     },
     visible: (index) => ({
       opacity: 1,
@@ -47,9 +53,9 @@ export default function Experience() {
         type: "spring",
         stiffness: 100,
         delay: index * 0.2,
-        duration: 0.8
-      }
-    })
+        duration: 0.8,
+      },
+    }),
   };
 
   const experiences = [
@@ -101,16 +107,16 @@ export default function Experience() {
   return (
     <motion.section
       id="experience"
-      className="py-8 sm:py-12 md:py-20 px-2 sm:px-4 relative"
+      className="pt-20 pb-10 md:pt-25 md:pb-16 px-2 sm:px-4 relative"
       ref={sectionRef}
       style={{ opacity, position: "relative" }}
     >
       {/* Enhanced Background elements */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{ y }}
       >
-        <motion.div 
+        <motion.div
           className="absolute top-1/4 left-2 sm:left-4 w-2 h-2 bg-cyan-400 rounded-full"
           animate={{
             scale: [1, 1.5, 1],
@@ -118,7 +124,7 @@ export default function Experience() {
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        <motion.div 
+        <motion.div
           className="absolute top-3/4 right-4 sm:right-10 w-1 h-1 bg-purple-400 rounded-full"
           animate={{
             scale: [1, 2, 1],
@@ -126,7 +132,7 @@ export default function Experience() {
           }}
           transition={{ duration: 3, repeat: Infinity, delay: 1 }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-1/3 left-1/4 sm:left-1/3 w-3 h-3 bg-pink-400 rounded-full"
           animate={{
             y: [0, -20, 0],
@@ -153,7 +159,7 @@ export default function Experience() {
               Experience & Education
             </motion.h2>
 
-            <motion.div 
+            <motion.div
               className="w-12 sm:w-16 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-4 sm:mb-6 md:mb-8 rounded-full"
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
@@ -170,13 +176,14 @@ export default function Experience() {
               `}
             </style>
 
-            <motion.p 
+            <motion.p
               className="text-sm sm:text-base md:text-xl text-white/80 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.7, duration: 0.6 }}
             >
-              My journey in software development and the experiences that shaped my skills
+              My journey in software development and the experiences that shaped
+              my skills
             </motion.p>
           </div>
         </ScrollReveal>
@@ -184,7 +191,7 @@ export default function Experience() {
         {/* Enhanced Timeline */}
         <div className="relative">
           {/* Animated Timeline line */}
-          <motion.div 
+          <motion.div
             className="absolute left-3 sm:left-6 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-400 via-purple-400 to-pink-400"
             initial={{ scaleY: 0 }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
@@ -193,7 +200,7 @@ export default function Experience() {
           />
 
           {/* Enhanced Timeline items */}
-          <motion.div 
+          <motion.div
             className="space-y-8 sm:space-y-10 md:space-y-12"
             variants={containerVariants}
             initial="hidden"
@@ -211,13 +218,13 @@ export default function Experience() {
                 onMouseLeave={() => setHoveredItem(null)}
               >
                 {/* Enhanced Timeline dot */}
-                <motion.div 
+                <motion.div
                   className="absolute left-3 sm:left-6 md:left-1/2 transform md:-translate-x-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full border-2 md:border-4 border-black z-10"
                   whileHover={{ scale: 1.2 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
                   {exp.current && (
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full"
                       animate={{
                         scale: [1, 1.5, 1],
@@ -236,10 +243,14 @@ export default function Experience() {
                 >
                   <motion.div
                     className="relative glass-card rounded-2xl p-3 sm:p-5 md:p-6 cursor-pointer"
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.03,
                       y: -5,
-                      transition: { type: "spring", stiffness: 400, damping: 10 }
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      },
                     }}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -248,7 +259,7 @@ export default function Experience() {
                     {/* Header */}
                     <div className="mb-3 sm:mb-4">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2">
-                        <motion.h3 
+                        <motion.h3
                           className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors"
                           whileHover={{ x: 5 }}
                         >
@@ -256,11 +267,11 @@ export default function Experience() {
                         </motion.h3>
                         <div className="flex items-center space-x-2 mt-1 sm:mt-0">
                           {exp.current && (
-                            <motion.span 
+                            <motion.span
                               className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs font-medium"
                               animate={{
                                 opacity: [0.7, 1, 0.7],
-                                transition: { duration: 2, repeat: Infinity }
+                                transition: { duration: 2, repeat: Infinity },
                               }}
                             >
                               Current
@@ -285,7 +296,11 @@ export default function Experience() {
                         {exp.type === "Education" && (
                           <motion.div
                             whileHover={{ rotate: 15 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
                           >
                             <GraduationCap className="w-4 h-4 text-cyan-400" />
                           </motion.div>
@@ -311,14 +326,14 @@ export default function Experience() {
                       </div>
 
                       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:space-x-4 text-white/60 text-xs sm:text-sm">
-                        <motion.div 
+                        <motion.div
                           className="flex items-center space-x-1 mb-1 gap-1 sm:mb-0"
                           whileHover={{ x: 3 }}
                         >
                           <Calendar className="w-3 h-3 md:w-4 md:h-4" />
                           <span>{exp.period}</span>
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                           className="flex items-center space-x-1"
                           whileHover={{ x: 3 }}
                         >
@@ -343,18 +358,25 @@ export default function Experience() {
 
                     {/* Achievements */}
                     <div className="mb-3 sm:mb-4">
-                      <motion.h4 
+                      <motion.h4
                         className="text-white font-semibold mb-2 flex items-center space-x-2 text-xs sm:text-sm md:text-base"
                         whileHover={{ x: 5 }}
                       >
                         <motion.div
                           whileHover={{ rotate: 90 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
                         >
                           <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-cyan-400" />
                         </motion.div>
                         <span>
-                          Key {exp.type === "Education" ? "Achievements" : "Responsibilities"}
+                          Key{" "}
+                          {exp.type === "Education"
+                            ? "Achievements"
+                            : "Responsibilities"}
                         </span>
                       </motion.h4>
                       <ul className="space-y-1">
@@ -365,18 +387,21 @@ export default function Experience() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.2 + idx * 0.1 + 1 }}
-                            whileHover={{ x: 5, color: "rgba(255, 255, 255, 0.9)" }}
+                            whileHover={{
+                              x: 5,
+                              color: "rgba(255, 255, 255, 0.9)",
+                            }}
                           >
-                            <motion.div 
+                            <motion.div
                               className="w-1 h-1 md:w-1.5 md:h-1.5 bg-cyan-400 rounded-full mt-1.5 md:mt-2 flex-shrink-0"
                               animate={{
                                 scale: [1, 1.2, 1],
                                 opacity: [0.7, 1, 0.7],
                               }}
-                              transition={{ 
-                                duration: 2, 
-                                repeat: Infinity, 
-                                delay: idx * 0.2 
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: idx * 0.2,
                               }}
                             />
                             <span>{achievement}</span>
@@ -387,11 +412,12 @@ export default function Experience() {
 
                     {/* Technologies */}
                     <div>
-                      <motion.h4 
+                      <motion.h4
                         className="text-white font-semibold mb-2 text-xs md:text-sm"
                         whileHover={{ color: "#06b6d4" }}
                       >
-                        Technologies {exp.type === "Education" ? "Learned" : "Used"}
+                        Technologies{" "}
+                        {exp.type === "Education" ? "Learned" : "Used"}
                       </motion.h4>
                       <div className="flex flex-wrap gap-1 md:gap-2">
                         {exp.technologies.map((tech, techIndex) => (
@@ -400,10 +426,12 @@ export default function Experience() {
                             className="px-2 py-1 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-md text-white/90 text-xs border border-white/20"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: index * 0.2 + techIndex * 0.05 + 1.2 }}
-                            whileHover={{ 
+                            transition={{
+                              delay: index * 0.2 + techIndex * 0.05 + 1.2,
+                            }}
+                            whileHover={{
                               scale: 1.1,
-                              backgroundColor: "rgba(6, 182, 212, 0.3)"
+                              backgroundColor: "rgba(6, 182, 212, 0.3)",
                             }}
                           >
                             {tech}
@@ -429,37 +457,38 @@ export default function Experience() {
         </div>
 
         {/* Enhanced Call to action */}
-        <motion.div 
+        <motion.div
           className="text-center mt-8 sm:mt-10 md:mt-16"
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ delay: 1.5, duration: 0.6 }}
         >
-          <motion.div 
+          <motion.div
             className="glass-card rounded-2xl p-4 sm:p-6 md:p-8"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-base sm:text-lg md:text-2xl font-bold text-white mb-3 sm:mb-4"
               whileHover={{ color: "#06b6d4" }}
             >
               Ready to Start My Career
             </motion.h3>
-            <motion.p 
+            <motion.p
               className="text-white/80 mb-4 sm:mb-6 max-w-2xl mx-auto text-xs sm:text-sm md:text-base"
               whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
             >
               As a passionate software developer intern, I'm eager to contribute
-              to innovative projects and continue learning from experienced professionals.
+              to innovative projects and continue learning from experienced
+              professionals.
             </motion.p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <motion.a
                 href="#contact"
                 className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-xs sm:text-sm md:text-base relative overflow-hidden"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
-                  boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)"
+                  boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)",
                 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -475,9 +504,9 @@ export default function Experience() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 border-2 border-cyan-400/50 rounded-lg text-white font-semibold text-xs sm:text-sm md:text-base relative overflow-hidden"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
-                  borderColor: "rgba(6, 182, 212, 1)"
+                  borderColor: "rgba(6, 182, 212, 1)",
                 }}
                 whileTap={{ scale: 0.95 }}
               >

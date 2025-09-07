@@ -238,7 +238,7 @@ export default function Projects() {
   return (
     <motion.section
       id="projects"
-      className="py-10 md:py-16 px-2 sm:px-4 relative"
+      className="pt-20 pb-10 md:pt-25 md:pb-16 px-2 sm:px-4 relative"
       ref={sectionRef}
       style={{ opacity, position: "relative" }}
     >

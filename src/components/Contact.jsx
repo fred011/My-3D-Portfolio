@@ -1,5 +1,11 @@
 import { useState, useRef } from "react";
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import {
   Mail,
   Phone,
@@ -29,7 +35,7 @@ export default function Contact() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
@@ -42,16 +48,16 @@ export default function Contact() {
       opacity: 1,
       transition: {
         delayChildren: 0.3,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 30,
-      scale: 0.9
+      scale: 0.9,
     },
     visible: {
       opacity: 1,
@@ -60,9 +66,9 @@ export default function Contact() {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 12
-      }
-    }
+        damping: 12,
+      },
+    },
   };
 
   const formVariants = {
@@ -73,9 +79,9 @@ export default function Contact() {
       transition: {
         type: "spring",
         stiffness: 100,
-        delay: 0.2
-      }
-    }
+        delay: 0.2,
+      },
+    },
   };
 
   const contactInfoVariants = {
@@ -86,9 +92,9 @@ export default function Contact() {
       transition: {
         type: "spring",
         stiffness: 100,
-        delay: 0.4
-      }
-    }
+        delay: 0.4,
+      },
+    },
   };
 
   const validateForm = () => {
@@ -218,18 +224,18 @@ export default function Contact() {
   ];
 
   return (
-    <motion.section 
-      id="contact" 
-      className="py-10 md:py-16 px-2 sm:px-4 relative"
+    <motion.section
+      id="contact"
+      className="pt-10 pb-10 md:pt-10 md:pb-16 px-2 sm:px-4 relative"
       ref={sectionRef}
       style={{ opacity, position: "relative" }}
     >
       {/* Floating background elements */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{ y }}
       >
-        <motion.div 
+        <motion.div
           className="absolute top-20 right-10 w-3 h-3 bg-cyan-400/30 rounded-full"
           animate={{
             scale: [1, 1.5, 1],
@@ -237,7 +243,7 @@ export default function Contact() {
           }}
           transition={{ duration: 3, repeat: Infinity }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-32 left-16 w-2 h-2 bg-purple-400/40 rounded-full"
           animate={{
             y: [0, -30, 0],
@@ -245,7 +251,7 @@ export default function Contact() {
           }}
           transition={{ duration: 4, repeat: Infinity, delay: 1.5 }}
         />
-        <motion.div 
+        <motion.div
           className="absolute top-1/2 right-1/4 w-4 h-4 bg-pink-400/20 rounded-full"
           animate={{
             rotate: [0, 360],
@@ -271,14 +277,14 @@ export default function Contact() {
             >
               Get In Touch
             </motion.h2>
-            
-            <motion.div 
+
+            <motion.div
               className="w-16 xs:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-5 md:mb-8 rounded-full"
               initial={{ scaleX: 0 }}
               animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             />
-            
+
             <style>
               {`
                 @keyframes gradientMove {
@@ -288,32 +294,33 @@ export default function Contact() {
                 }
               `}
             </style>
-            
-            <motion.p 
+
+            <motion.p
               className="text-base xs:text-lg md:text-xl text-white/80 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.7, duration: 0.6 }}
             >
-              Ready to work together? Let's discuss your project and create something amazing.
+              Ready to work together? Let's discuss your project and create
+              something amazing.
             </motion.p>
           </div>
         </ScrollReveal>
 
-        <motion.div 
+        <motion.div
           className="flex flex-col lg:flex-row gap-8 lg:gap-12"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
           {/* Enhanced Contact Form */}
-          <motion.div 
+          <motion.div
             className="glass-card rounded-2xl p-4 xs:p-6 md:p-8 w-full lg:w-1/2"
             variants={formVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-6"
               whileHover={{ color: "#06b6d4" }}
             >
@@ -323,7 +330,7 @@ export default function Contact() {
             {/* Enhanced Status Messages */}
             <AnimatePresence>
               {submitStatus === "success" && (
-                <motion.div 
+                <motion.div
                   className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start space-x-3"
                   initial={{ opacity: 0, scale: 0.8, y: -20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -355,7 +362,7 @@ export default function Contact() {
               )}
 
               {submitStatus === "error" && (
-                <motion.div 
+                <motion.div
                   className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start space-x-3"
                   initial={{ opacity: 0, scale: 0.8, y: -20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -370,7 +377,8 @@ export default function Contact() {
                   </motion.div>
                   <div className="flex-1">
                     <span className="text-red-400 text-sm md:text-base">
-                      Failed to send message. Please try again or contact me directly.
+                      Failed to send message. Please try again or contact me
+                      directly.
                     </span>
                   </div>
                   <motion.button
@@ -393,9 +401,15 @@ export default function Contact() {
               variants={containerVariants}
             >
               {/* Enhanced Form Fields */}
-              <motion.div className="flex flex-col md:flex-row gap-5 mb-4" variants={itemVariants}>
+              <motion.div
+                className="flex flex-col md:flex-row gap-5 mb-4"
+                variants={itemVariants}
+              >
                 <motion.div className="flex-1" whileHover={{ scale: 1.02 }}>
-                  <label htmlFor="name" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
+                  <label
+                    htmlFor="name"
+                    className="block text-white/80 mb-2 font-medium text-sm md:text-base"
+                  >
                     Name *
                   </label>
                   <input
@@ -413,7 +427,7 @@ export default function Contact() {
                   />
                   <AnimatePresence>
                     {errors.name && (
-                      <motion.p 
+                      <motion.p
                         className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -426,8 +440,14 @@ export default function Contact() {
                   </AnimatePresence>
                 </motion.div>
 
-                <motion.div className="flex-1 mt-4 md:mt-0" whileHover={{ scale: 1.02 }}>
-                  <label htmlFor="email" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
+                <motion.div
+                  className="flex-1 mt-4 md:mt-0"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <label
+                    htmlFor="email"
+                    className="block text-white/80 mb-2 font-medium text-sm md:text-base"
+                  >
                     Email *
                   </label>
                   <input
@@ -445,7 +465,7 @@ export default function Contact() {
                   />
                   <AnimatePresence>
                     {errors.email && (
-                      <motion.p 
+                      <motion.p
                         className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -459,8 +479,15 @@ export default function Contact() {
                 </motion.div>
               </motion.div>
 
-              <motion.div className="mb-4" variants={itemVariants} whileHover={{ scale: 1.02 }}>
-                <label htmlFor="subject" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
+              <motion.div
+                className="mb-4"
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+              >
+                <label
+                  htmlFor="subject"
+                  className="block text-white/80 mb-2 font-medium text-sm md:text-base"
+                >
                   Subject *
                 </label>
                 <input
@@ -478,7 +505,7 @@ export default function Contact() {
                 />
                 <AnimatePresence>
                   {errors.subject && (
-                    <motion.p 
+                    <motion.p
                       className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -491,8 +518,15 @@ export default function Contact() {
                 </AnimatePresence>
               </motion.div>
 
-              <motion.div className="mb-4" variants={itemVariants} whileHover={{ scale: 1.02 }}>
-                <label htmlFor="message" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
+              <motion.div
+                className="mb-4"
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+              >
+                <label
+                  htmlFor="message"
+                  className="block text-white/80 mb-2 font-medium text-sm md:text-base"
+                >
                   Message *
                 </label>
                 <textarea
@@ -510,7 +544,7 @@ export default function Contact() {
                 />
                 <AnimatePresence>
                   {errors.message && (
-                    <motion.p 
+                    <motion.p
                       className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -529,10 +563,14 @@ export default function Contact() {
                   type="submit"
                   disabled={isSubmitting}
                   className="w-full py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-base md:text-lg relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
-                  whileHover={!isSubmitting ? { 
-                    scale: 1.02,
-                    boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)"
-                  } : {}}
+                  whileHover={
+                    !isSubmitting
+                      ? {
+                          scale: 1.02,
+                          boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)",
+                        }
+                      : {}
+                  }
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 >
                   <motion.div
@@ -542,10 +580,14 @@ export default function Contact() {
                   />
                   {isSubmitting ? (
                     <>
-                      <motion.div 
+                      <motion.div
                         className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-1"
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
                       />
                       <span>Sending...</span>
                     </>
@@ -553,7 +595,11 @@ export default function Contact() {
                     <>
                       <motion.div
                         whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 10,
+                        }}
                       >
                         <Send className="w-5 h-5 mr-1" />
                       </motion.div>
@@ -566,27 +612,29 @@ export default function Contact() {
           </motion.div>
 
           {/* Enhanced Contact Info */}
-          <motion.div 
+          <motion.div
             className="flex-1 flex flex-col space-y-6 md:space-y-8"
             variants={contactInfoVariants}
           >
             <motion.div variants={itemVariants}>
-              <motion.h3 
+              <motion.h3
                 className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-4 md:mb-6"
                 whileHover={{ color: "#06b6d4" }}
               >
                 Let's Connect
               </motion.h3>
-              <motion.p 
+              <motion.p
                 className="text-white/80 text-base md:text-lg leading-relaxed mb-6 md:mb-8"
                 whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
               >
-                I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology and development. Feel free to reach out!
+                I'm always open to discussing new opportunities, interesting
+                projects, or just having a chat about technology and
+                development. Feel free to reach out!
               </motion.p>
             </motion.div>
 
             {/* Enhanced Contact Info Cards */}
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6"
               variants={containerVariants}
             >
@@ -596,39 +644,45 @@ export default function Contact() {
                   href={info.href}
                   className="flex gap-2 items-center p-4 glass-card rounded-xl group cursor-pointer"
                   variants={itemVariants}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
                     y: -5,
-                    transition: { type: "spring", stiffness: 400, damping: 10 }
+                    transition: { type: "spring", stiffness: 400, damping: 10 },
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center"
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.1,
                       rotate: 5,
-                      transition: { type: "spring", stiffness: 400, damping: 10 }
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      },
                     }}
                   >
                     <info.icon className="w-6 h-6 text-white" />
                   </motion.div>
                   <div>
                     <p className="text-white/60 text-sm">{info.label}</p>
-                    <p className="text-white font-medium text-base break-all">{info.value}</p>
+                    <p className="text-white font-medium text-base break-all">
+                      {info.value}
+                    </p>
                   </div>
                 </motion.a>
               ))}
             </motion.div>
 
             <motion.div className="pt-6 md:pt-8" variants={itemVariants}>
-              <motion.h4 
+              <motion.h4
                 className="text-base xs:text-lg md:text-xl font-semibold text-white mb-4"
                 whileHover={{ color: "#06b6d4" }}
               >
                 Follow Me
               </motion.h4>
-              <motion.div 
+              <motion.div
                 className="flex flex-wrap gap-2 space-x-0 sm:space-x-4"
                 variants={containerVariants}
               >
@@ -641,10 +695,14 @@ export default function Contact() {
                     className="w-12 h-12 glass-card rounded-lg flex items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
                     aria-label={social.label}
                     variants={itemVariants}
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.1,
                       backgroundColor: "rgba(6, 182, 212, 0.2)",
-                      transition: { type: "spring", stiffness: 400, damping: 10 }
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      },
                     }}
                     whileTap={{ scale: 0.9 }}
                   >
@@ -654,22 +712,24 @@ export default function Contact() {
               </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="mt-8 p-4 xs:p-6 glass-card rounded-2xl"
               variants={itemVariants}
               whileHover={{ scale: 1.02 }}
             >
-              <motion.h4 
+              <motion.h4
                 className="text-base xs:text-lg font-semibold text-white mb-2"
                 whileHover={{ color: "#06b6d4" }}
               >
                 Open to Opportunities
               </motion.h4>
-              <motion.p 
+              <motion.p
                 className="text-white/70 text-sm"
                 whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
               >
-                I'm currently seeking internships, entry-level positions, and freelance or contract opportunities to grow my skills and contribute to exciting projects!
+                I'm currently seeking internships, entry-level positions, and
+                freelance or contract opportunities to grow my skills and
+                contribute to exciting projects!
               </motion.p>
             </motion.div>
           </motion.div>
@@ -677,17 +737,18 @@ export default function Contact() {
       </div>
 
       {/* Enhanced Footer */}
-      <motion.div 
+      <motion.div
         className="mt-12 md:mt-16 pt-8 border-t border-white/10 text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ delay: 1.5, duration: 0.6 }}
       >
-        <motion.p 
+        <motion.p
           className="text-white/60 text-xs xs:text-sm"
           whileHover={{ color: "rgba(255, 255, 255, 0.8)" }}
         >
-          © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with React, Three.js, and passion for code.
+          © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with
+          React, Three.js, and passion for code.
         </motion.p>
       </motion.div>
     </motion.section>

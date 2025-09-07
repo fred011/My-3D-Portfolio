@@ -1,13 +1,7 @@
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { useRef, useState, useEffect, Suspense } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useInView,
-} from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { TextureLoader } from "three";
 import * as THREE from "three";
 import EarthCanvas from "./Earth";
@@ -144,16 +138,11 @@ function CosmicParticles() {
 export default function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPlanetHovered, setIsPlanetHovered] = useState(false);
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const { scrollY, scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+  const { scrollY } = useScroll();
 
-  // Enhanced parallax effects
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  // Parallax effects
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   // Smooth spring animations
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
@@ -252,9 +241,9 @@ export default function Hero() {
 
   return (
     <motion.section
-      ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden py-10 md:py-16 lg:py-20"
-      style={{ y, opacity, position: "relative" }}
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-25 pb-10 md:pt-15 md:pb-16 lg:pt-40 lg:pb-20"
+      style={{ y, opacity }}
     >
       {/* Floating background elements */}
       <motion.div
@@ -446,12 +435,10 @@ export default function Hero() {
 
           {/* Enhanced 3D Canvas */}
           <motion.div
-            className="w-full flex items-center justify-center order-1 lg:order-2 p-0 rounded-2xl"
+            className="w-full flex items-center justify-center order-1 lg:order-2"
             style={{
               minHeight: canvasHeight,
               height: canvasHeight,
-              background: "none",
-              border: "none",
             }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -463,8 +450,10 @@ export default function Hero() {
             }}
             whileHover={{ scale: 1.02 }}
           >
-            <div className="flex items-center justify-center w-full h-full">
-              <EarthCanvas />
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="w-full h-full max-w-md max-h-md mx-auto flex items-center justify-center">
+                <EarthCanvas />
+              </div>
             </div>
           </motion.div>
         </div>
