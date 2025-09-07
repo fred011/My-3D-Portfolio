@@ -138,10 +138,6 @@ function CosmicParticles() {
 export default function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPlanetHovered, setIsPlanetHovered] = useState(false);
-  const { scrollY } = useScroll();
-
-  // Parallax effects
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
 
   // Smooth spring animations
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
@@ -241,14 +237,10 @@ export default function Hero() {
   return (
     <motion.section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-25 pb-10 md:pt-15 md:pb-16 lg:pt-40 lg:pb-20"
-      style={{ y }}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10 md:pt-25 md:pb-16"
     >
       {/* Floating background elements */}
-      <motion.div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ y }}
-      >
+      <motion.div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-20 left-10 w-3 h-3 bg-cyan-400/30 rounded-full"
           animate={{
