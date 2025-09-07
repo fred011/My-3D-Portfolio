@@ -142,7 +142,6 @@ export default function Hero() {
 
   // Parallax effects
   const y = useTransform(scrollY, [0, 500], [0, 150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   // Smooth spring animations
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
@@ -243,7 +242,7 @@ export default function Hero() {
     <motion.section
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-25 pb-10 md:pt-15 md:pb-16 lg:pt-40 lg:pb-20"
-      style={{ y, opacity }}
+      style={{ y }}
     >
       {/* Floating background elements */}
       <motion.div
