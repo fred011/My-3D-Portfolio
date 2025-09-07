@@ -334,7 +334,7 @@ export default function Hero() {
                 variants={itemVariants}
                 whileHover={{ color: "rgba(255, 255, 255, 1)" }}
               >
-                Full Stack Developer
+                Web Developer
               </motion.p>
               <motion.div
                 className="glass-card p-4 md:p-6 rounded-xl"
