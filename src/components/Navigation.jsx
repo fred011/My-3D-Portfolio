@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Code, User, Briefcase, Mail, Rocket } from "lucide-react";
+import {
+  Menu,
+  X,
+  Code,
+  User,
+  Briefcase,
+  Mail,
+  Rocket,
+  Home,
+} from "lucide-react";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +39,7 @@ export default function Navigation() {
   }, [isOpen]);
 
   const navItems = [
+    { name: "Home", href: "#home", icon: Home },
     { name: "About", href: "#about", icon: User },
     { name: "Skills", href: "#skills", icon: Code },
     { name: "Experience", href: "#experience", icon: Briefcase },
@@ -122,10 +132,6 @@ export default function Navigation() {
           <motion.div
             className="flex items-center space-x-2 cursor-pointer group"
             variants={itemVariants}
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick("#hero"); // scroll to hero without updating URL
-            }}
           >
             <motion.div
               whileHover={{ rotate: 360 }}
