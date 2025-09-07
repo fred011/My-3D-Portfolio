@@ -39,7 +39,7 @@ export default function Navigation() {
   }, [isOpen]);
 
   const navItems = [
-    { name: "Home", href: "#home", icon: Home },
+    { name: "Home", href: "#hero", icon: Home },
     { name: "About", href: "#about", icon: User },
     { name: "Skills", href: "#skills", icon: Code },
     { name: "Experience", href: "#experience", icon: Briefcase },
