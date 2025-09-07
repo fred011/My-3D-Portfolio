@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import { SiWhatsapp } from "react-icons/si";
+import ScrollReveal from "./ScrollReveal";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -23,6 +25,71 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 30,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    }
+  };
+
+  const formVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        delay: 0.2
+      }
+    }
+  };
+
+  const contactInfoVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        delay: 0.4
+      }
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -151,93 +218,184 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-10 md:py-16 px-2 sm:px-4 relative">
+    <motion.section 
+      id="contact" 
+      className="py-10 md:py-16 px-2 sm:px-4 relative"
+      ref={sectionRef}
+      style={{ opacity, position: "relative" }}
+    >
+      {/* Floating background elements */}
+      <motion.div 
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        style={{ y }}
+      >
+        <motion.div 
+          className="absolute top-20 right-10 w-3 h-3 bg-cyan-400/30 rounded-full"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.3, 0.8, 0.3],
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-32 left-16 w-2 h-2 bg-purple-400/40 rounded-full"
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0.4, 1, 0.4],
+          }}
+          transition={{ duration: 4, repeat: Infinity, delay: 1.5 }}
+        />
+        <motion.div 
+          className="absolute top-1/2 right-1/4 w-4 h-4 bg-pink-400/20 rounded-full"
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{ duration: 5, repeat: Infinity, delay: 2 }}
+        />
+      </motion.div>
+
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8 md:mb-12">
-          <h2
-            className="text-3xl xs:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 bg-clip-text text-transparent transition-all duration-500"
-            style={{
-              backgroundImage:
-                "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
-              backgroundSize: "600% 600%",
-              animation: "gradientMove 4s ease infinite",
-            }}
+        <ScrollReveal direction="up" delay={0.2}>
+          <div className="text-center mb-8 md:mb-12">
+            <motion.h2
+              className="text-3xl xs:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 bg-clip-text text-transparent transition-all duration-500"
+              style={{
+                backgroundImage:
+                  "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
+                backgroundSize: "600% 600%",
+                animation: "gradientMove 4s ease infinite",
+              }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              Get In Touch
+            </motion.h2>
+            
+            <motion.div 
+              className="w-16 xs:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-5 md:mb-8 rounded-full"
+              initial={{ scaleX: 0 }}
+              animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            />
+            
+            <style>
+              {`
+                @keyframes gradientMove {
+                  0% { background-position: 0% 50%; }
+                  50% { background-position: 100% 50%; }
+                  100% { background-position: 0% 50%; }
+                }
+              `}
+            </style>
+            
+            <motion.p 
+              className="text-base xs:text-lg md:text-xl text-white/80 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
+              Ready to work together? Let's discuss your project and create something amazing.
+            </motion.p>
+          </div>
+        </ScrollReveal>
+
+        <motion.div 
+          className="flex flex-col lg:flex-row gap-8 lg:gap-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          {/* Enhanced Contact Form */}
+          <motion.div 
+            className="glass-card rounded-2xl p-4 xs:p-6 md:p-8 w-full lg:w-1/2"
+            variants={formVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
-            Get In Touch
-          </h2>
-          <div className="w-16 xs:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-5 md:mb-8 rounded-full"></div>
-          <style>
-            {`
-              @keyframes gradientMove {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-              }
-            `}
-          </style>
-          <p className="text-base xs:text-lg md:text-xl text-white/80 max-w-3xl mx-auto">
-            Ready to work together? Let's discuss your project and create
-            something amazing.
-          </p>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* Contact Form */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 xs:p-6 md:p-8 border border-white/10 w-full lg:w-1/2">
-            <h3 className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-6">
+            <motion.h3 
+              className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-6"
+              whileHover={{ color: "#06b6d4" }}
+            >
               Send Me a Message
-            </h3>
+            </motion.h3>
 
-            {/* Status Messages */}
-            {submitStatus === "success" && (
-              <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <span className="text-green-400 text-sm md:text-base">
-                    Message sent successfully! I'll get back to you soon.
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSubmitStatus(null)}
-                  className="text-green-400 hover:text-green-300 transition-colors"
+            {/* Enhanced Status Messages */}
+            <AnimatePresence>
+              {submitStatus === "success" && (
+                <motion.div 
+                  className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start space-x-3"
+                  initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+                  <motion.div
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                  </motion.div>
+                  <div className="flex-1">
+                    <span className="text-green-400 text-sm md:text-base">
+                      Message sent successfully! I'll get back to you soon.
+                    </span>
+                  </div>
+                  <motion.button
+                    type="button"
+                    onClick={() => setSubmitStatus(null)}
+                    className="text-green-400 hover:text-green-300 transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <X className="w-4 h-4" />
+                  </motion.button>
+                </motion.div>
+              )}
 
-            {submitStatus === "error" && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start space-x-3">
-                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <span className="text-red-400 text-sm md:text-base">
-                    Failed to send message. Please try again or contact me
-                    directly.
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSubmitStatus(null)}
-                  className="text-red-400 hover:text-red-300 transition-colors"
+              {submitStatus === "error" && (
+                <motion.div 
+                  className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start space-x-3"
+                  initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 0.5, repeat: 2 }}
+                  >
+                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  </motion.div>
+                  <div className="flex-1">
+                    <span className="text-red-400 text-sm md:text-base">
+                      Failed to send message. Please try again or contact me directly.
+                    </span>
+                  </div>
+                  <motion.button
+                    type="button"
+                    onClick={() => setSubmitStatus(null)}
+                    className="text-red-400 hover:text-red-300 transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <X className="w-4 h-4" />
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <form
+            <motion.form
               className="space-y-5"
               onSubmit={handleSubmit}
               autoComplete="off"
+              variants={containerVariants}
             >
-              {/* Name & Email Grid */}
-              <div className="flex flex-col md:flex-row gap-5 mb-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="name"
-                    className="block text-white/80 mb-2 font-medium text-sm md:text-base"
-                  >
+              {/* Enhanced Form Fields */}
+              <motion.div className="flex flex-col md:flex-row gap-5 mb-4" variants={itemVariants}>
+                <motion.div className="flex-1" whileHover={{ scale: 1.02 }}>
+                  <label htmlFor="name" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
                     Name *
                   </label>
                   <input
@@ -253,19 +411,23 @@ export default function Contact() {
                     }`}
                     placeholder="Your Name"
                   />
-                  {errors.name && (
-                    <p className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      <span>{errors.name}</span>
-                    </p>
-                  )}
-                </div>
+                  <AnimatePresence>
+                    {errors.name && (
+                      <motion.p 
+                        className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <AlertCircle className="w-3 h-3 mr-1" />
+                        <span>{errors.name}</span>
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
 
-                <div className="flex-1 mt-4 md:mt-0">
-                  <label
-                    htmlFor="email"
-                    className="block text-white/80 mb-2 font-medium text-sm md:text-base"
-                  >
+                <motion.div className="flex-1 mt-4 md:mt-0" whileHover={{ scale: 1.02 }}>
+                  <label htmlFor="email" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
                     Email *
                   </label>
                   <input
@@ -281,21 +443,24 @@ export default function Contact() {
                     }`}
                     placeholder="your@email.com"
                   />
-                  {errors.email && (
-                    <p className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      <span>{errors.email}</span>
-                    </p>
-                  )}
-                </div>
-              </div>
+                  <AnimatePresence>
+                    {errors.email && (
+                      <motion.p 
+                        className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <AlertCircle className="w-3 h-3 mr-1" />
+                        <span>{errors.email}</span>
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </motion.div>
 
-              {/* Subject Input */}
-              <div className="mb-4">
-                <label
-                  htmlFor="subject"
-                  className="block text-white/80 mb-2 font-medium text-sm md:text-base"
-                >
+              <motion.div className="mb-4" variants={itemVariants} whileHover={{ scale: 1.02 }}>
+                <label htmlFor="subject" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
                   Subject *
                 </label>
                 <input
@@ -311,20 +476,23 @@ export default function Contact() {
                   }`}
                   placeholder="Project Discussion"
                 />
-                {errors.subject && (
-                  <p className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1">
-                    <AlertCircle className="w-3 h-3 mr-1" />
-                    <span>{errors.subject}</span>
-                  </p>
-                )}
-              </div>
+                <AnimatePresence>
+                  {errors.subject && (
+                    <motion.p 
+                      className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      <span>{errors.subject}</span>
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
 
-              {/* Message Textarea */}
-              <div className="mb-4">
-                <label
-                  htmlFor="message"
-                  className="block text-white/80 mb-2 font-medium text-sm md:text-base"
-                >
+              <motion.div className="mb-4" variants={itemVariants} whileHover={{ scale: 1.02 }}>
+                <label htmlFor="message" className="block text-white/80 mb-2 font-medium text-sm md:text-base">
                   Message *
                 </label>
                 <textarea
@@ -340,149 +508,188 @@ export default function Contact() {
                   }`}
                   placeholder="Tell me about your project..."
                 />
-                {errors.message && (
-                  <p className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1">
-                    <AlertCircle className="w-3 h-3 mr-1" />
-                    <span>{errors.message}</span>
-                  </p>
-                )}
-              </div>
+                <AnimatePresence>
+                  {errors.message && (
+                    <motion.p 
+                      className="mt-2 text-red-400 text-xs md:text-sm flex items-center space-x-1"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      <span>{errors.message}</span>
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
 
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
+              {/* Enhanced Submit Button */}
+              <motion.div className="pt-2" variants={itemVariants}>
+                <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-base md:text-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+                  className="w-full py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-base md:text-lg relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+                  whileHover={!isSubmitting ? { 
+                    scale: 1.02,
+                    boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)"
+                  } : {}}
+                  whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 opacity-0"
+                    whileHover={{ opacity: 0.2 }}
+                    transition={{ duration: 0.3 }}
+                  />
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1"></div>
+                      <motion.div 
+                        className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-1"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      />
                       <span>Sending...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 mr-1" />
-                      <span>Send Message</span>
+                      <motion.div
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <Send className="w-5 h-5 mr-1" />
+                      </motion.div>
+                      <span className="relative z-10">Send Message</span>
                     </>
                   )}
-                </button>
-              </div>
-            </form>
-          </div>
+                </motion.button>
+              </motion.div>
+            </motion.form>
+          </motion.div>
 
-          {/* Contact Info */}
-          <div className="flex-1 flex flex-col space-y-6 md:space-y-8">
-            <div>
-              <h3 className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
+          {/* Enhanced Contact Info */}
+          <motion.div 
+            className="flex-1 flex flex-col space-y-6 md:space-y-8"
+            variants={contactInfoVariants}
+          >
+            <motion.div variants={itemVariants}>
+              <motion.h3 
+                className="text-lg xs:text-xl md:text-2xl font-bold text-white mb-4 md:mb-6"
+                whileHover={{ color: "#06b6d4" }}
+              >
                 Let's Connect
-              </h3>
-              <p className="text-white/80 text-base md:text-lg leading-relaxed mb-6 md:mb-8">
-                I'm always open to discussing new opportunities, interesting
-                projects, or just having a chat about technology and
-                development. Feel free to reach out!
-              </p>
-            </div>
+              </motion.h3>
+              <motion.p 
+                className="text-white/80 text-base md:text-lg leading-relaxed mb-6 md:mb-8"
+                whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
+              >
+                I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology and development. Feel free to reach out!
+              </motion.p>
+            </motion.div>
 
-            {/* Responsive Contact Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6">
+            {/* Enhanced Contact Info Cards */}
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6"
+              variants={containerVariants}
+            >
               {contactInfo.map((info, index) => (
-                <a
+                <motion.a
                   key={index}
                   href={info.href}
-                  className="flex gap-2 items-center p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+                  className="flex gap-2 items-center p-4 glass-card rounded-xl group cursor-pointer"
+                  variants={itemVariants}
+                  whileHover={{ 
+                    scale: 1.05,
+                    y: -5,
+                    transition: { type: "spring", stiffness: 400, damping: 10 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <motion.div 
+                    className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center"
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: 5,
+                      transition: { type: "spring", stiffness: 400, damping: 10 }
+                    }}
+                  >
                     <info.icon className="w-6 h-6 text-white" />
-                  </div>
+                  </motion.div>
                   <div>
                     <p className="text-white/60 text-sm">{info.label}</p>
-                    <p className="text-white font-medium text-base break-all">
-                      {info.value}
-                    </p>
+                    <p className="text-white font-medium text-base break-all">{info.value}</p>
                   </div>
-                </a>
+                </motion.a>
               ))}
-            </div>
+            </motion.div>
 
-            <div className="pt-6 md:pt-8">
-              <h4 className="text-base xs:text-lg md:text-xl font-semibold text-white mb-4">
+            <motion.div className="pt-6 md:pt-8" variants={itemVariants}>
+              <motion.h4 
+                className="text-base xs:text-lg md:text-xl font-semibold text-white mb-4"
+                whileHover={{ color: "#06b6d4" }}
+              >
                 Follow Me
-              </h4>
-              <div className="flex flex-wrap gap-2 space-x-0 sm:space-x-4">
+              </motion.h4>
+              <motion.div 
+                className="flex flex-wrap gap-2 space-x-0 sm:space-x-4"
+                variants={containerVariants}
+              >
                 {socialLinks.map((social, index) => (
-                  <a
+                  <motion.a
                     key={index}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+                    className="w-12 h-12 glass-card rounded-lg flex items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
                     aria-label={social.label}
+                    variants={itemVariants}
+                    whileHover={{ 
+                      scale: 1.1,
+                      backgroundColor: "rgba(6, 182, 212, 0.2)",
+                      transition: { type: "spring", stiffness: 400, damping: 10 }
+                    }}
+                    whileTap={{ scale: 0.9 }}
                   >
                     <social.icon className="w-5 h-5" />
-                  </a>
+                  </motion.a>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div className="mt-8 p-4 xs:p-6 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl md:rounded-2xl border border-white/10">
-              <h4 className="text-base xs:text-lg font-semibold text-white mb-2">
+            <motion.div 
+              className="mt-8 p-4 xs:p-6 glass-card rounded-2xl"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+            >
+              <motion.h4 
+                className="text-base xs:text-lg font-semibold text-white mb-2"
+                whileHover={{ color: "#06b6d4" }}
+              >
                 Open to Opportunities
-              </h4>
-              <p className="text-white/70 text-sm">
-                I'm currently seeking internships, entry-level positions, and
-                freelance or contract opportunities to grow my skills and
-                contribute to exciting projects!
-              </p>
-            </div>
-          </div>
-        </div>
+              </motion.h4>
+              <motion.p 
+                className="text-white/70 text-sm"
+                whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
+              >
+                I'm currently seeking internships, entry-level positions, and freelance or contract opportunities to grow my skills and contribute to exciting projects!
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-12 md:mt-16 pt-8 border-t border-white/10 text-center">
-        <p className="text-white/60 text-xs xs:text-sm">
-          © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with
-          React, Three.js, and passion for code.
-        </p>
-      </div>
-      {/* Extra responsive tweaks */}
-      <style>
-        {`
-          @media (max-width: 1023px) {
-            #contact .flex-col.lg\\:flex-row {
-              flex-direction: column !important;
-            }
-          }
-          @media (max-width: 640px) {
-            #contact .w-12.h-12 {
-              width: 2.5rem !important;
-              height: 2.5rem !important;
-            }
-            #contact .text-3xl {
-              font-size: 1.75rem !important;
-            }
-            #contact .md\\:text-2xl {
-              font-size: 1.25rem !important;
-            }
-            #contact .md\\:text-lg {
-              font-size: 1rem !important;
-            }
-            #contact .md\\:mb-6 {
-              margin-bottom: 1rem !important;
-            }
-            #contact .md\\:mb-8 {
-              margin-bottom: 1.5rem !important;
-            }
-            #contact .md\\:pt-8 {
-              padding-top: 1.5rem !important;
-            }
-            #contact .md\\:rounded-2xl {
-              border-radius: 1rem !important;
-            }
-          }
-        `}
-      </style>
-    </section>
+      {/* Enhanced Footer */}
+      <motion.div 
+        className="mt-12 md:mt-16 pt-8 border-t border-white/10 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ delay: 1.5, duration: 0.6 }}
+      >
+        <motion.p 
+          className="text-white/60 text-xs xs:text-sm"
+          whileHover={{ color: "rgba(255, 255, 255, 0.8)" }}
+        >
+          © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with React, Three.js, and passion for code.
+        </motion.p>
+      </motion.div>
+    </motion.section>
   );
 }

@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Hero from "./components/Hero.jsx";
 import About from "./components/About.jsx";
 import Skills from "./components/Skills.jsx";
@@ -9,6 +10,7 @@ import LoadingScreen from "./components/LoadingScreen.jsx";
 import StarField from "./components/StarField.jsx";
 import MouseTracker from "./components/MouseTracker.jsx";
 import Experience from "./components/Experience.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,22 +32,56 @@ export default function App() {
     return <LoadingScreen />;
   }
 
-  return (
-    <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen relative overflow-hidden">
-      {/* Background Effects */}
-      <StarField />
-      <MouseTracker />
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    in: { opacity: 1, y: 0 },
+    out: { opacity: 0, y: -20 }
+  };
 
-      {/* Main Content */}
-      <Navigation />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
-        <Contact />
-      </main>
-    </div>
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.8
+  };
+
+  return (
+    <ErrorBoundary>
+      <AnimatePresence mode="wait">
+        <motion.div 
+          className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen relative overflow-hidden"
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+        >
+          {/* Background Effects */}
+          <ErrorBoundary>
+            <StarField />
+            <MouseTracker />
+          </ErrorBoundary>
+
+          {/* Main Content */}
+          <ErrorBoundary>
+            <Navigation />
+          </ErrorBoundary>
+          
+          <ErrorBoundary>
+            <motion.main
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+            >
+              <Hero />
+              <About />
+              <Skills />
+              <Experience />
+              <Projects />
+              <Contact />
+            </motion.main>
+          </ErrorBoundary>
+        </motion.div>
+      </AnimatePresence>
+    </ErrorBoundary>
   );
 }
