@@ -1,139 +1,10 @@
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { useRef, useState, useEffect, Suspense } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useSpring } from "framer-motion";
 import { TextureLoader } from "three";
 import * as THREE from "three";
 import EarthCanvas from "./Earth";
-
-function RotatingPlanet({ mousePosition, isHovered }) {
-  const meshRef = useRef();
-  const cloudsRef = useRef();
-
-  // Load textures with error handling
-  const planetTexture = useLoader(TextureLoader, "/textures/planet.png");
-  const cloudsTexture = useLoader(TextureLoader, "/textures/clouds.png");
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      // Base rotation
-      meshRef.current.rotation.y += isHovered ? 0.02 : 0.01;
-
-      // Mouse interaction
-      meshRef.current.rotation.x = mousePosition.y * 0.2;
-      meshRef.current.rotation.z = mousePosition.x * 0.1;
-
-      // Floating animation
-      meshRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-
-    if (cloudsRef.current) {
-      // Clouds rotate slightly faster
-      cloudsRef.current.rotation.y += isHovered ? 0.025 : 0.015;
-      cloudsRef.current.rotation.x = mousePosition.y * 0.15;
-      cloudsRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <group>
-        {/* Planet */}
-        <mesh ref={meshRef} scale={isHovered ? 1.8 : 1.6}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshStandardMaterial
-            map={planetTexture}
-            roughness={0.8}
-            metalness={0.1}
-          />
-        </mesh>
-
-        {/* Clouds */}
-        <mesh ref={cloudsRef} scale={isHovered ? 1.85 : 1.65}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshStandardMaterial
-            map={cloudsTexture}
-            transparent
-            opacity={0.4}
-            roughness={0.9}
-            metalness={0}
-            alphaTest={0.1}
-          />
-        </mesh>
-      </group>
-    </Float>
-  );
-}
-
-function PlanetFallback() {
-  const meshRef = useRef();
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-      meshRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <mesh ref={meshRef} scale={1.6}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial color="#4338ca" roughness={0.8} metalness={0.2} />
-      </mesh>
-    </Float>
-  );
-}
-
-function CosmicParticles() {
-  const particlesRef = useRef();
-  const particleCount = 500;
-
-  const positions = new Float32Array(particleCount * 3);
-  const colors = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 15;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
-
-    const color = new THREE.Color();
-    color.setHSL(Math.random() * 0.3 + 0.5, 0.8, 0.8);
-    colors[i * 3] = color.r;
-    colors[i * 3 + 1] = color.g;
-    colors[i * 3 + 2] = color.b;
-  }
-
-  useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.02;
-      particlesRef.current.rotation.x = state.clock.elapsedTime * 0.01;
-    }
-  });
-
-  return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={positions}
-          count={particleCount}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          array={colors}
-          count={particleCount}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial size={0.03} vertexColors transparent opacity={0.6} />
-    </points>
-  );
-}
 
 export default function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -237,7 +108,7 @@ export default function Hero() {
   return (
     <motion.section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10 md:pt-25 md:pb-16"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Floating background elements */}
       <motion.div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -267,121 +138,103 @@ export default function Hero() {
         />
       </motion.div>
 
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Enhanced Content Side */}
+      {/* Main container */}
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 min-h-screen flex items-center">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center 
+                  text-center lg:text-left justify-items-center lg:justify-items-start w-full"
+        >
+          {/* Content Side */}
           <motion.div
-            className="space-y-6 md:space-y-8 order-2 lg:order-1 text-center lg:text-left"
+            className="space-y-6 md:space-y-8 order-2 lg:order-1 w-full"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             style={{ x }}
           >
-            <motion.div
-              className="space-y-3 md:space-y-4"
+            <motion.h1
+              className="text-base xs:text-lg sm:text-xl md:text-2xl font-medium text-cyan-400"
               variants={itemVariants}
+              animate={{
+                opacity: [0.5, 1, 0.5],
+                transition: { duration: 2, repeat: Infinity },
+              }}
             >
-              <motion.h1
-                className="text-base xs:text-lg sm:text-xl md:text-2xl font-medium text-cyan-400"
-                variants={itemVariants}
-                animate={{
-                  opacity: [0.5, 1, 0.5],
-                  transition: { duration: 2, repeat: Infinity },
-                }}
-              >
-                Hello, I'm
-              </motion.h1>
-              <motion.h2
-                className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-clip-text text-transparent leading-tight"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
-                  backgroundSize: "600% 600%",
-                  animation: "gradientMove 4s ease infinite",
-                }}
-                variants={titleVariants}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { type: "spring", stiffness: 300 },
-                }}
-              >
-                Ferdinand
-              </motion.h2>
-              <motion.h3
-                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent leading-tight"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(270deg, #a78bfa, #06b6d4, #f472b6, #a78bfa)",
-                  backgroundSize: "600% 600%",
-                  animation: "gradientMove 4s ease infinite",
-                }}
-                variants={titleVariants}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { type: "spring", stiffness: 300 },
-                }}
-              >
-                Mphahle Morena
-              </motion.h3>
-            </motion.div>
+              Hello, I'm
+            </motion.h1>
+
+            <motion.h2
+              className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-clip-text text-transparent leading-tight"
+              style={{
+                backgroundImage:
+                  "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
+                backgroundSize: "600% 600%",
+                animation: "gradientMove 4s ease infinite",
+              }}
+              variants={titleVariants}
+              whileHover={{
+                scale: 1.05,
+                transition: { type: "spring", stiffness: 300 },
+              }}
+            >
+              Ferdinand
+            </motion.h2>
+
+            <motion.h3
+              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent leading-tight"
+              style={{
+                backgroundImage:
+                  "linear-gradient(270deg, #a78bfa, #06b6d4, #f472b6, #a78bfa)",
+                backgroundSize: "600% 600%",
+                animation: "gradientMove 4s ease infinite",
+              }}
+              variants={titleVariants}
+              whileHover={{
+                scale: 1.05,
+                transition: { type: "spring", stiffness: 300 },
+              }}
+            >
+              Mphahle Morena
+            </motion.h3>
+
+            <motion.p
+              className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/90 font-medium"
+              variants={itemVariants}
+              whileHover={{ color: "rgba(255, 255, 255, 1)" }}
+            >
+              Web Developer
+            </motion.p>
 
             <motion.div
-              className="space-y-3 md:space-y-4 mt-4"
+              className="glass-card p-4 md:p-6 rounded-xl"
               variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <motion.p
-                className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/90 font-medium"
-                variants={itemVariants}
-                whileHover={{ color: "rgba(255, 255, 255, 1)" }}
-              >
-                Web Developer
+              <motion.p className="text-sm xs:text-base md:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                Passionate about building modern web applications using the MERN
+                stack. Currently learning and growing as a software developer,
+                with expertise in{" "}
+                <motion.span className="text-green-400 font-semibold">
+                  MongoDB
+                </motion.span>
+                ,{" "}
+                <motion.span className="text-yellow-400 font-semibold">
+                  Express
+                </motion.span>
+                ,{" "}
+                <motion.span className="text-cyan-400 font-semibold">
+                  React
+                </motion.span>{" "}
+                and{" "}
+                <motion.span className="text-purple-400 font-semibold">
+                  Node.js
+                </motion.span>
+                .
               </motion.p>
-              <motion.div
-                className="glass-card p-4 md:p-6 rounded-xl"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.p
-                  className="text-sm xs:text-base md:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto lg:mx-0"
-                  variants={itemVariants}
-                  whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
-                >
-                  Passionate about building modern web applications using the
-                  MERN stack. Currently learning and growing as a software
-                  developer, with expertise in{" "}
-                  <motion.span
-                    className="text-green-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#10b981" }}
-                  >
-                    MongoDB
-                  </motion.span>
-                  ,{" "}
-                  <motion.span
-                    className="text-yellow-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#f59e0b" }}
-                  >
-                    Express
-                  </motion.span>
-                  ,{" "}
-                  <motion.span
-                    className="text-cyan-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#06b6d4" }}
-                  >
-                    React
-                  </motion.span>
-                  , and{" "}
-                  <motion.span
-                    className="text-purple-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#8b5cf6" }}
-                  >
-                    Node.js
-                  </motion.span>
-                  .
-                </motion.p>
-              </motion.div>
             </motion.div>
 
+            {/* Buttons */}
             <motion.div
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 mt-4 justify-center lg:justify-start"
               variants={containerVariants}
@@ -390,17 +243,9 @@ export default function Hero() {
                 href="#projects"
                 className="px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-sm sm:text-base md:text-lg text-center relative overflow-hidden"
                 variants={buttonVariants}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)",
-                }}
-                whileTap={{ scale: 0.95 }}
+                whileHover="hover"
+                whileTap="tap"
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 opacity-0"
-                  whileHover={{ opacity: 0.2 }}
-                  transition={{ duration: 0.3 }}
-                />
                 <span className="relative z-10">View My Work</span>
               </motion.a>
 
@@ -408,29 +253,18 @@ export default function Hero() {
                 href="#contact"
                 className="px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 border-2 border-cyan-400/50 rounded-lg text-white font-semibold text-sm sm:text-base md:text-lg text-center relative overflow-hidden"
                 variants={buttonVariants}
-                whileHover={{
-                  scale: 1.05,
-                  borderColor: "rgba(6, 182, 212, 1)",
-                }}
-                whileTap={{ scale: 0.95 }}
+                whileHover="hover"
+                whileTap="tap"
               >
-                <motion.div
-                  className="absolute inset-0 bg-cyan-400/10"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
                 <span className="relative z-10">Get In Touch</span>
               </motion.a>
             </motion.div>
           </motion.div>
 
-          {/* Enhanced 3D Canvas */}
+          {/* 3D Earth Canvas */}
           <motion.div
-            className="w-full flex items-center justify-center order-1 lg:order-2"
-            style={{
-              minHeight: canvasHeight,
-              height: canvasHeight,
-            }}
+            className="w-full flex items-center  justify-center order-1  lg:order-2"
+            style={{ minHeight: canvasHeight, height: canvasHeight }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
@@ -442,7 +276,7 @@ export default function Hero() {
             whileHover={{ scale: 1.02 }}
           >
             <div className="w-full h-full flex items-center justify-center">
-              <div className="w-full h-full max-w-md max-h-md mx-auto flex items-center justify-center">
+              <div className=" h-full max-w-md max-h-md mx-auto flex items-center justify-center">
                 <EarthCanvas />
               </div>
             </div>
@@ -450,20 +284,16 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Enhanced Scroll Indicator */}
+      {/* Scroll Indicator */}
       <motion.div
         className="absolute bottom-4 xs:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
         animate={{
           y: [0, -10, 0],
           transition: { duration: 2, repeat: Infinity },
         }}
-        whileHover={{ scale: 1.1 }}
       >
         <motion.div className="flex flex-col items-center space-y-2">
-          <motion.div
-            className="w-4 h-7 xs:w-5 xs:h-8 md:w-6 md:h-10 border-2 border-cyan-400/50 rounded-full flex justify-center relative overflow-hidden glass-card"
-            whileHover={{ borderColor: "rgba(6, 182, 212, 1)" }}
-          >
+          <motion.div className="w-4 h-7 xs:w-5 xs:h-8 md:w-6 md:h-10 border-2 border-cyan-400/50 rounded-full flex justify-center relative overflow-hidden glass-card">
             <motion.div
               className="w-0.5 xs:w-1 h-2 xs:h-2.5 md:h-3 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mt-2"
               animate={{
@@ -473,20 +303,13 @@ export default function Hero() {
               }}
             />
           </motion.div>
-          <motion.span
-            className="text-cyan-400/70 text-xs xs:text-sm md:text-base"
-            animate={{
-              opacity: [0.7, 1, 0.7],
-              transition: { duration: 2, repeat: Infinity },
-            }}
-            whileHover={{ color: "rgba(6, 182, 212, 1)" }}
-          >
+          <motion.span className="text-cyan-400/70 text-xs xs:text-sm md:text-base">
             Scroll to explore
           </motion.span>
         </motion.div>
       </motion.div>
 
-      {/* Add consistent gradient animation styles */}
+      {/* Gradient Animation */}
       <style>
         {`
           @keyframes gradientMove {
