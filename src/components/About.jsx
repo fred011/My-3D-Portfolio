@@ -408,8 +408,10 @@ export default function About() {
 
             {/* CTA Button */}
             <motion.div variants={itemVariants}>
-              <motion.a
-                href="#contact"
+              <motion.button
+                onClick={() => {
+                  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -421,7 +423,7 @@ export default function About() {
                 >
                   →
                 </motion.span>
-              </motion.a>
+              </motion.button>
             </motion.div>
           </motion.div>
 

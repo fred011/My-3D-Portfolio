@@ -8,13 +8,20 @@ import {
   useSpring,
   useMotionValue,
 } from "framer-motion";
-import { ExternalLink, Github, Eye, Sparkles, Code2, Folder } from "lucide-react";
+import {
+  ExternalLink,
+  Github,
+  Eye,
+  Sparkles,
+  Code2,
+  Folder,
+} from "lucide-react";
 
 export default function Projects() {
   const [hoveredProject, setHoveredProject] = useState(null);
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
-  
+  const isInView = useInView(sectionRef, { once: false, margin: "-50px" });
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -22,8 +29,16 @@ export default function Projects() {
 
   // Smooth parallax effects (from About section)
   const y = useTransform(scrollYProgress, [0, 1], [150, -150]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.8]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.95]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0.8]
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0.8, 1, 1, 0.95]
+  );
 
   // Mouse tracking for interactive effects
   const mouseX = useMotionValue(0);
@@ -53,7 +68,14 @@ export default function Projects() {
       description:
         "A real-time MERN stack chat application with user authentication message notifications, and online status. Built with Socket.io for instant communication and an intuitive UI for seamless chatting experience.",
       image: "/chat app.png",
-      technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.io", "JWT"],
+      technologies: [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Socket.io",
+        "JWT",
+      ],
       liveUrl: "https://chat-app-xh2t.onrender.com",
       githubUrl: "https://github.com/fred011/Chat-App",
       featured: true,
@@ -65,7 +87,14 @@ export default function Projects() {
       description:
         "A full-stack Twitter clone built with the MERN stack, featuring user authentication, real-time tweets, likes, retweets, comments, profile management, and a dynamic newsfeed.",
       image: "/x.png",
-      technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.io", "JWT"],
+      technologies: [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Socket.io",
+        "JWT",
+      ],
       liveUrl: "https://twitter-clone-i8jj.onrender.com",
       githubUrl: "https://github.com/fred011/twitter-clone",
       featured: true,
@@ -76,7 +105,7 @@ export default function Projects() {
       title: "Weather App",
       description:
         "A responsive weather application built with vanilla JavaScript. Users can search for real-time weather conditions by city.",
-      image: "/weather.png",
+      image: "/weather app.png",
       technologies: ["HTML", "CSS", "JavaScript", "OpenWeatherMap API"],
       liveUrl: "https://weather-app-six-phi-85.vercel.app/",
       githubUrl: "https://github.com/fred011/Weather-App",
@@ -95,6 +124,30 @@ export default function Projects() {
       featured: false,
       color: "from-pink-500 to-rose-600",
     },
+    {
+      id: 5,
+      title: "KNM Bursary System",
+      description:
+        "A bursary management system built with the MERN stack, featuring student applications, profile management, and a responsive dashboard interface.",
+      image: "/knm.png",
+      technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
+      liveUrl: "https://kn-m-bursary-management-system.vercel.app/",
+      githubUrl: "https://github.com/erisndev/KnM-Bursary-Management-System",
+      featured: false,
+      color: "from-pink-500 to-rose-600",
+    },
+    {
+      id: 6,
+      title: "Silulo LMS",
+      description:
+        "A learning management system developed using WordPress and Tutor LMS, providing course creation, student enrollment, and progress tracking features.",
+      image: "/silulo.png",
+      technologies: ["WordPress", "Tutor LMS", "PHP", "MySQL", "CSS"],
+      liveUrl: "https://silulocollege.erisngraduate.com/",
+      githubUrl: "",
+      featured: true,
+      color: "from-pink-500 to-rose-600",
+    },
   ];
 
   // Enhanced animation variants (from About section)
@@ -110,11 +163,11 @@ export default function Projects() {
   };
 
   const titleVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       scale: 0.9,
-      filter: "blur(10px)"
+      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
@@ -220,7 +273,7 @@ export default function Projects() {
           }}
           transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
-        
+
         {/* Floating particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -314,15 +367,25 @@ export default function Projects() {
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 {/* Project Image */}
-                <div className="relative overflow-hidden h-64">
+                <div className="relative overflow-hidden h-64 bg-gradient-to-br from-slate-800 to-slate-900">
                   <motion.img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.6 }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
                   />
-                  
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center hidden">
+                    <div className="text-center">
+                      <Folder className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                      <p className="text-slate-400 text-sm">{project.title}</p>
+                    </div>
+                  </div>
+
                   {/* Overlay with actions */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center gap-4"
@@ -330,16 +393,18 @@ export default function Projects() {
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <motion.a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
-                      whileHover={{ scale: 1.1, rotate: 360 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Github className="w-6 h-6" />
-                    </motion.a>
+                    {project.githubUrl && (
+                      <motion.a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                        whileHover={{ scale: 1.1, rotate: 360 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Github className="w-6 h-6" />
+                      </motion.a>
+                    )}
                     <motion.a
                       href={project.liveUrl}
                       target="_blank"
@@ -361,7 +426,7 @@ export default function Projects() {
                   >
                     {project.title}
                   </motion.h3>
-                  
+
                   <motion.p
                     className="text-white/70 mb-4 leading-relaxed"
                     whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
@@ -425,15 +490,25 @@ export default function Projects() {
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 {/* Project Image */}
-                <div className="relative overflow-hidden h-48">
+                <div className="relative overflow-hidden h-48 bg-gradient-to-br from-slate-800 to-slate-900">
                   <motion.img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.6 }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
                   />
-                  
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center hidden">
+                    <div className="text-center">
+                      <Folder className="w-8 h-8 text-slate-400 mx-auto mb-1" />
+                      <p className="text-slate-400 text-xs">{project.title}</p>
+                    </div>
+                  </div>
+
                   {/* Overlay with actions */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center gap-3"
@@ -441,16 +516,18 @@ export default function Projects() {
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <motion.a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
-                      whileHover={{ scale: 1.1, rotate: 360 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Github className="w-5 h-5" />
-                    </motion.a>
+                    {project.githubUrl && (
+                      <motion.a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                        whileHover={{ scale: 1.1, rotate: 360 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Github className="w-5 h-5" />
+                      </motion.a>
+                    )}
                     <motion.a
                       href={project.liveUrl}
                       target="_blank"
@@ -472,7 +549,7 @@ export default function Projects() {
                   >
                     {project.title}
                   </motion.h3>
-                  
+
                   <motion.p
                     className="text-white/70 text-sm mb-3 line-clamp-2"
                     whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
