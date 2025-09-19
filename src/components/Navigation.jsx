@@ -174,7 +174,7 @@ export default function Navigation() {
                   e.preventDefault();
                   handleNavClick(item.href);
                 }}
-                className="text-white/80 hover:text-cyan-400 transition-all duration-300 gap-2 flex items-center space-x-2 group relative px-3 py-2 rounded-lg hover:bg-white/5"
+                className="text-white/80 hover:text-cyan-400 transition-all duration-300 gap-1 flex items-center space-x-1 group relative px-3 py-2 rounded-lg hover:bg-white/5"
                 variants={itemVariants}
               >
                 <item.icon className="w-4 h-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />

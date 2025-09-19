@@ -1,514 +1,414 @@
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { OrbitControls, Float, Environment } from "@react-three/drei";
-import { useRef, useState, useEffect, Suspense } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { TextureLoader } from "three";
-import * as THREE from "three";
-import EarthCanvas from "./Earth";
+import { useState, useEffect, useRef, Suspense } from "react";
+import {
+  motion,
+  useSpring,
+  useMotionValue,
+  useTransform,
+  AnimatePresence,
+  useInView,
+  useScroll,
+} from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Preload, useGLTF, Html } from "@react-three/drei";
+import {
+  Sparkles,
+  ChevronDown,
+  Code2,
+  Zap,
+  Star,
+  Heart,
+  Rocket,
+} from "lucide-react";
 
-function RotatingPlanet({ mousePosition, isHovered }) {
-  const meshRef = useRef();
-  const cloudsRef = useRef();
-
-  // Load textures with error handling
-  const planetTexture = useLoader(TextureLoader, "/textures/planet.png");
-  const cloudsTexture = useLoader(TextureLoader, "/textures/clouds.png");
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      // Base rotation
-      meshRef.current.rotation.y += isHovered ? 0.02 : 0.01;
-
-      // Mouse interaction
-      meshRef.current.rotation.x = mousePosition.y * 0.2;
-      meshRef.current.rotation.z = mousePosition.x * 0.1;
-
-      // Floating animation
-      meshRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-
-    if (cloudsRef.current) {
-      // Clouds rotate slightly faster
-      cloudsRef.current.rotation.y += isHovered ? 0.025 : 0.015;
-      cloudsRef.current.rotation.x = mousePosition.y * 0.15;
-      cloudsRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <group>
-        {/* Planet */}
-        <mesh ref={meshRef} scale={isHovered ? 1.8 : 1.6}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshStandardMaterial
-            map={planetTexture}
-            roughness={0.8}
-            metalness={0.1}
-          />
-        </mesh>
-
-        {/* Clouds */}
-        <mesh ref={cloudsRef} scale={isHovered ? 1.85 : 1.65}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshStandardMaterial
-            map={cloudsTexture}
-            transparent
-            opacity={0.4}
-            roughness={0.9}
-            metalness={0}
-            alphaTest={0.1}
-          />
-        </mesh>
-      </group>
-    </Float>
-  );
-}
-
-function PlanetFallback() {
-  const meshRef = useRef();
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-      meshRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <mesh ref={meshRef} scale={1.6}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial color="#4338ca" roughness={0.8} metalness={0.2} />
-      </mesh>
-    </Float>
-  );
-}
-
-function CosmicParticles() {
-  const particlesRef = useRef();
-  const particleCount = 500;
-
-  const positions = new Float32Array(particleCount * 3);
-  const colors = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 15;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
-
-    const color = new THREE.Color();
-    color.setHSL(Math.random() * 0.3 + 0.5, 0.8, 0.8);
-    colors[i * 3] = color.r;
-    colors[i * 3 + 1] = color.g;
-    colors[i * 3 + 2] = color.b;
-  }
-
-  useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.02;
-      particlesRef.current.rotation.x = state.clock.elapsedTime * 0.01;
-    }
-  });
-
-  return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={positions}
-          count={particleCount}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          array={colors}
-          count={particleCount}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial size={0.03} vertexColors transparent opacity={0.6} />
-    </points>
-  );
-}
+// Earth Canvas Component
 
 export default function Hero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isPlanetHovered, setIsPlanetHovered] = useState(false);
+  const [textIndex, setTextIndex] = useState(0);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
 
-  // Smooth spring animations
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
-  const x = useSpring(0, springConfig);
+  // Scroll-based animations matching About section
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Smooth parallax effects
+  const y = useTransform(scrollYProgress, [0, 1], [150, -150]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0.8]
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0.8, 1, 1, 0.95]
+  );
+
+  // Mouse tracking for interactive effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 150, damping: 25 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 150, damping: 25 });
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const handleMouseMove = (e) => {
-      const newX = (e.clientX / window.innerWidth) * 2 - 1;
-      const newY = -(e.clientY / window.innerHeight) * 2 + 1;
-
-      setMousePosition({ x: newX, y: newY });
-      x.set(newX * 20); // Subtle parallax effect
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        mouseX.set(x * 20);
+        mouseY.set(y * 20);
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [x]);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
-  // Responsive canvas dimensions
-  const [canvasDimensions, setCanvasDimensions] = useState({
-    width: 350,
-    height: 350,
-  });
+  const roles = [
+    "Web Developer",
+    "MERN Stack Developer",
+    "Problem Solver",
+    "Creative Thinker",
+  ];
 
   useEffect(() => {
-    function updateCanvasDimensions() {
-      const vw = window.innerWidth;
-      let size;
-
-      if (vw < 320) size = 200; // Very small phones
-      else if (vw < 400) size = 220; // Small phones
-      else if (vw < 640) size = 260; // Medium phones
-      else if (vw < 768) size = 300; // Large phones/small tablets
-      else if (vw < 1024) size = 350; // Tablets
-      else size = 400; // Desktop
-
-      setCanvasDimensions({ width: size, height: size });
-    }
-
-    updateCanvasDimensions();
-    window.addEventListener("resize", updateCanvasDimensions);
-    return () => window.removeEventListener("resize", updateCanvasDimensions);
+    const interval = setInterval(() => {
+      setTextIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Animation variants
+  // Animation variants matching About section
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
+        delayChildren: 0.2,
+        staggerChildren: 0.08,
       },
     },
   };
 
   const titleVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
+    hidden: {
+      opacity: 0,
+      y: 50,
+      scale: 0.9,
+      filter: "blur(10px)",
+    },
     visible: {
-      scale: 1,
       opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
       transition: {
         type: "spring",
         stiffness: 100,
-        delay: 0.2,
+        damping: 15,
+        duration: 0.8,
       },
     },
   };
 
-  const buttonVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      y: 40,
+      scale: 0.95,
+      rotateX: -15,
+    },
     visible: {
-      scale: 1,
       opacity: 1,
+      y: 0,
+      scale: 1,
+      rotateX: 0,
       transition: {
         type: "spring",
-        stiffness: 100,
+        stiffness: 120,
+        damping: 18,
+        duration: 0.6,
       },
     },
-    hover: {
-      scale: 1.05,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 10,
-      },
-    },
-    tap: { scale: 0.95 },
   };
 
   return (
-    <motion.section
+    <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10 md:pt-25 md:pb-16"
+      ref={sectionRef}
+      className="relative min-h-screen py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
-      {/* Floating background elements */}
-      <motion.div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Enhanced animated background matching About section */}
+      <motion.div className="absolute inset-0 pointer-events-none">
+        {/* Gradient orbs */}
         <motion.div
-          className="absolute top-20 left-10 w-3 h-3 bg-cyan-400/30 rounded-full"
+          className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
+          style={{ x: smoothMouseX, y: smoothMouseY }}
           animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0.8, 0.3],
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 3, repeat: Infinity }}
+          transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div
-          className="absolute top-40 right-20 w-2 h-2 bg-purple-400/40 rounded-full"
+          className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"
+          style={{ x: smoothMouseX, y: smoothMouseY }}
           animate={{
-            y: [0, -30, 0],
-            opacity: [0.4, 1, 0.4],
+            scale: [1.2, 1, 1.2],
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
+
+        {/* Floating particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Grid pattern */}
         <motion.div
-          className="absolute bottom-32 left-1/3 w-4 h-4 bg-pink-400/20 rounded-full"
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.3, 1],
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "50px 50px",
+            y,
           }}
-          transition={{ duration: 5, repeat: Infinity, delay: 2 }}
         />
       </motion.div>
 
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Enhanced Content Side */}
+      <div className="max-w-4xl mx-auto relative z-10 ">
+        <div className="flex items-center justify-center min-h-screen">
+          {/* Content Centered */}
           <motion.div
-            className="space-y-6 md:space-y-8 order-2 lg:order-1 text-center lg:text-left"
+            className="space-y-6 text-center"
             variants={containerVariants}
             initial="hidden"
-            animate="visible"
-            style={{ x }}
+            animate={isInView ? "visible" : "hidden"}
           >
+            {/* Animated Greeting Badge */}
             <motion.div
-              className="space-y-3 md:space-y-4"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full"
               variants={itemVariants}
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "rgba(6, 182, 212, 0.15)",
+              }}
             >
+              <Sparkles className="w-5 h-5 text-cyan-400" />
+              <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">
+                Welcome to my portfolio website
+              </span>
+              <Sparkles className="w-5 h-5 text-cyan-400" />
+            </motion.div>
+
+            {/* Main Title */}
+            <motion.div variants={titleVariants}>
               <motion.h1
-                className="text-base xs:text-lg sm:text-xl md:text-2xl font-medium text-cyan-400"
-                variants={itemVariants}
-                animate={{
-                  opacity: [0.5, 1, 0.5],
-                  transition: { duration: 2, repeat: Infinity },
-                }}
+                className="text-xl md:text-2xl text-white/80 mb-4"
+                initial={{ opacity: 0, x: -50 }}
+                animate={
+                  isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }
+                }
+                transition={{ delay: 0.5, duration: 0.8 }}
               >
                 Hello, I'm
               </motion.h1>
+
               <motion.h2
-                className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-clip-text text-transparent leading-tight"
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight mb-4"
                 style={{
-                  backgroundImage:
+                  background:
                     "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
-                  backgroundSize: "600% 600%",
-                  animation: "gradientMove 4s ease infinite",
+                  backgroundSize: "400% 400%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
-                variants={titleVariants}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { type: "spring", stiffness: 300 },
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
                 }}
               >
                 Ferdinand
               </motion.h2>
+
               <motion.h3
-                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight"
                 style={{
-                  backgroundImage:
+                  background:
                     "linear-gradient(270deg, #a78bfa, #06b6d4, #f472b6, #a78bfa)",
-                  backgroundSize: "600% 600%",
-                  animation: "gradientMove 4s ease infinite",
+                  backgroundSize: "400% 400%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
-                variants={titleVariants}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { type: "spring", stiffness: 300 },
+                animate={{
+                  backgroundPosition: ["100% 50%", "0% 50%", "100% 50%"],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
                 }}
               >
                 Mphahle Morena
               </motion.h3>
             </motion.div>
 
+            {/* Animated Role Text */}
             <motion.div
-              className="space-y-3 md:space-y-4 mt-4"
+              className="flex items-center justify-center gap-3"
               variants={itemVariants}
             >
-              <motion.p
-                className="text-base xs:text-lg sm:text-xl md:text-2xl text-white/90 font-medium"
-                variants={itemVariants}
-                whileHover={{ color: "rgba(255, 255, 255, 1)" }}
-              >
-                Web Developer
-              </motion.p>
               <motion.div
-                className="glass-card p-4 md:p-6 rounded-xl"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
+                className="h-px bg-gradient-to-r from-transparent items-center justify-center via-cyan-400 to-transparent flex-1 max-w-[100px]"
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              />
+              <AnimatePresence mode="wait">
                 <motion.p
-                  className="text-sm xs:text-base md:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto lg:mx-0"
-                  variants={itemVariants}
-                  whileHover={{ color: "rgba(255, 255, 255, 0.9)" }}
+                  key={textIndex}
+                  className="text-xl sm:text-2xl md:text-3xl text-white font-medium"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  Passionate about building modern web applications using the
-                  MERN stack. Currently learning and growing as a software
-                  developer, with expertise in{" "}
-                  <motion.span
-                    className="text-green-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#10b981" }}
-                  >
-                    MongoDB
-                  </motion.span>
-                  ,{" "}
-                  <motion.span
-                    className="text-yellow-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#f59e0b" }}
-                  >
-                    Express
-                  </motion.span>
-                  ,{" "}
-                  <motion.span
-                    className="text-cyan-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#06b6d4" }}
-                  >
-                    React
-                  </motion.span>
-                  , and{" "}
-                  <motion.span
-                    className="text-purple-400 font-semibold"
-                    whileHover={{ scale: 1.1, color: "#8b5cf6" }}
-                  >
-                    Node.js
-                  </motion.span>
-                  .
+                  {roles[textIndex]}
                 </motion.p>
-              </motion.div>
+              </AnimatePresence>
+              <motion.div
+                className="h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent flex-1 max-w-[100px]"
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              />
             </motion.div>
 
+            {/* Description */}
+            <motion.p
+              className="text-lg text-white/80 leading-relaxed"
+              variants={itemVariants}
+            >
+              Passionate about building modern web applications using the{" "}
+              <span className="text-cyan-400 font-semibold">MERN stack</span>.
+              Currently learning and growing as a software developer, with
+              expertise in{" "}
+              <span className="text-green-400 font-semibold">MongoDB</span>,{" "}
+              <span className="text-yellow-400 font-semibold">Express</span>,{" "}
+              <span className="text-cyan-400 font-semibold">React</span>, and{" "}
+              <span className="text-purple-400 font-semibold">Node.js</span>.
+            </motion.p>
+
+            {/* CTA Buttons */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 mt-4 justify-center lg:justify-start"
-              variants={containerVariants}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              variants={itemVariants}
             >
               <motion.a
                 href="#projects"
-                className="px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-semibold text-sm sm:text-base md:text-lg text-center relative overflow-hidden"
-                variants={buttonVariants}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 10px 25px rgba(6, 182, 212, 0.4)",
-                }}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 opacity-0"
-                  whileHover={{ opacity: 0.2 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <span className="relative z-10">View My Work</span>
+                View My Work
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  →
+                </motion.span>
               </motion.a>
 
               <motion.a
                 href="#contact"
-                className="px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 border-2 border-cyan-400/50 rounded-lg text-white font-semibold text-sm sm:text-base md:text-lg text-center relative overflow-hidden"
-                variants={buttonVariants}
-                whileHover={{
-                  scale: 1.05,
-                  borderColor: "rgba(6, 182, 212, 1)",
-                }}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-cyan-400/30 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-cyan-400/10 transition-all"
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <motion.div
-                  className="absolute inset-0 bg-cyan-400/10"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <span className="relative z-10">Get In Touch</span>
+                Get In Touch
+                <Sparkles className="w-4 h-4" />
               </motion.a>
             </motion.div>
-          </motion.div>
-
-          {/* Enhanced 3D Canvas - Properly Centered for Mobile */}
-          <motion.div
-            className="w-full flex items-center justify-center order-1 lg:order-2 px-4 sm:px-0"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 100,
-              delay: 0.5,
-              duration: 0.8,
-            }}
-            whileHover={{ scale: 1.02 }}
-          >
-            {/* Responsive container with perfect centering for all devices */}
-            <div
-              className="relative mx-auto"
-              style={{
-                width: canvasDimensions.width,
-                height: canvasDimensions.height,
-                minWidth: "200px",
-                minHeight: "200px",
-              }}
-            >
-              <EarthCanvas />
-            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Enhanced Scroll Indicator */}
+      {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-4 xs:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{
-          y: [0, -10, 0],
-          transition: { duration: 2, repeat: Infinity },
-        }}
-        whileHover={{ scale: 1.1 }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ delay: 2, duration: 0.8 }}
       >
-        <motion.div className="flex flex-col items-center space-y-2">
+        <motion.div
+          className="flex flex-col items-center gap-3 cursor-pointer"
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          whileHover={{ scale: 1.1 }}
+          onClick={() => {
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
           <motion.div
-            className="w-4 h-7 xs:w-5 xs:h-8 md:w-6 md:h-10 border-2 border-cyan-400/50 rounded-full flex justify-center relative overflow-hidden glass-card"
-            whileHover={{ borderColor: "rgba(6, 182, 212, 1)" }}
+            className="relative w-7 h-12 border-2 border-cyan-400/50 rounded-full flex justify-center backdrop-blur-sm"
+            whileHover={{
+              borderColor: "rgba(6, 182, 212, 0.8)",
+              backgroundColor: "rgba(6, 182, 212, 0.1)",
+            }}
           >
             <motion.div
-              className="w-0.5 xs:w-1 h-2 xs:h-2.5 md:h-3 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mt-2"
+              className="w-1.5 h-4 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full mt-2"
               animate={{
-                y: [0, 8, 0],
+                y: [0, 15, 0],
                 opacity: [1, 0.3, 1],
-                transition: { duration: 1.5, repeat: Infinity },
               }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
           <motion.span
-            className="text-cyan-400/70 text-xs xs:text-sm md:text-base"
-            animate={{
-              opacity: [0.7, 1, 0.7],
-              transition: { duration: 2, repeat: Infinity },
-            }}
+            className="text-cyan-400/80 text-sm font-medium tracking-wide flex items-center gap-1"
             whileHover={{ color: "rgba(6, 182, 212, 1)" }}
           >
             Scroll to explore
+            <ChevronDown className="w-4 h-4" />
           </motion.span>
         </motion.div>
       </motion.div>
-
-      {/* Add consistent gradient animation styles */}
-      <style>
-        {`
-          @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}
-      </style>
-    </motion.section>
+    </section>
   );
 }

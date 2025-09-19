@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Text, OrbitControls, Float } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
   motion,
@@ -8,21 +8,10 @@ import {
   useScroll,
   useTransform,
   AnimatePresence,
+  useSpring,
+  useMotionValue,
 } from "framer-motion";
-
-// Mock ScrollReveal component since it's not available
-function ScrollReveal({ children, direction = "up", delay = 0 }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: direction === "up" ? 50 : -50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
-      viewport={{ once: true }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+import { Sparkles, Code2, Database, Server, Globe } from "lucide-react";
 
 function SkillSphere({ position, text, color, size = 1 }) {
   const meshRef = useRef();
@@ -71,14 +60,37 @@ function SkillSphere({ position, text, color, size = 1 }) {
 
 export default function Skills() {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  // Smooth parallax effects (from About section)
+  const y = useTransform(scrollYProgress, [0, 1], [150, -150]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.8]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.95]);
+
+  // Mouse tracking for interactive effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 150, damping: 25 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 150, damping: 25 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        mouseX.set(x * 20);
+        mouseY.set(y * 20);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
   const skills = [
     { name: "React", color: "#61DAFB", category: "Frontend", level: 95 },
@@ -93,9 +105,6 @@ export default function Skills() {
     { name: "Git", color: "#F05032", category: "Tools", level: 90 },
     { name: "GitHub", color: "#181717", category: "Tools", level: 88 },
     { name: "VS Code", color: "#007ACC", category: "Tools", level: 95 },
-    { name: "Postman", color: "#FF6C37", category: "Tools", level: 85 },
-    { name: "Vercel", color: "#000000", category: "Tools", level: 80 },
-    { name: "Render", color: "#000000", category: "Tools", level: 80 },
   ];
 
   const skillSpheres = [
@@ -113,14 +122,35 @@ export default function Skills() {
     "Tools & DevOps": skills.filter((skill) => skill.category === "Tools"),
   };
 
-  // Enhanced Animation variants
+  // Enhanced animation variants (from About section)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.1,
+        delayChildren: 0.2,
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const titleVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.9,
+      filter: "blur(10px)"
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        duration: 0.8,
       },
     },
   };
@@ -128,40 +158,48 @@ export default function Skills() {
   const itemVariants = {
     hidden: {
       opacity: 0,
-      y: 30,
-      scale: 0.9,
+      y: 40,
+      scale: 0.95,
+      rotateX: -15,
     },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
+      rotateX: 0,
       transition: {
         type: "spring",
-        stiffness: 100,
-        damping: 12,
+        stiffness: 120,
+        damping: 18,
+        duration: 0.6,
       },
     },
   };
 
-  const skillCardVariants = {
+  const cardVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.8,
+      y: 60,
+      scale: 0.85,
+      rotateY: -10,
     },
     visible: (index) => ({
       opacity: 1,
+      y: 0,
       scale: 1,
+      rotateY: 0,
       transition: {
         type: "spring",
         stiffness: 100,
+        damping: 15,
         delay: index * 0.1,
-        duration: 0.6,
-        damping: 12,
+        duration: 0.8,
       },
     }),
     hover: {
-      scale: 1.1,
-      y: -5,
+      scale: 1.05,
+      y: -10,
+      rotateY: 5,
       transition: {
         type: "spring",
         stiffness: 400,
@@ -170,120 +208,137 @@ export default function Skills() {
     },
   };
 
-  const progressBarVariants = {
-    hidden: { width: 0 },
-    visible: (level) => ({
-      width: `${level}%`,
-      transition: {
-        duration: 1.5,
-        ease: "easeOut",
-        delay: 0.5,
-      },
-    }),
+  const floatingAnimation = {
+    y: [0, -20, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
   };
 
   return (
     <motion.section
       id="skills"
-      className="pt-20 pb-10 md:pt-25 md:pb-16 px-2 sm:px-4 relative"
+      className="relative min-h-screen py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
       ref={sectionRef}
-      style={{ opacity, position: "relative" }}
+      style={{ opacity, scale }}
     >
-      {/* Floating background elements */}
-      <motion.div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ y }}
-      >
+      {/* Enhanced animated background (from About section) */}
+      <motion.div className="absolute inset-0 pointer-events-none">
+        {/* Gradient orbs */}
         <motion.div
-          className="absolute top-20 left-10 w-3 h-3 bg-cyan-400/30 rounded-full"
+          className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
+          style={{ x: smoothMouseX, y: smoothMouseY }}
           animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0.8, 0.3],
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 3, repeat: Infinity }}
+          transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div
-          className="absolute top-40 right-20 w-2 h-2 bg-purple-400/40 rounded-full"
+          className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"
+          style={{ x: smoothMouseX, y: smoothMouseY }}
           animate={{
-            y: [0, -30, 0],
-            opacity: [0.4, 1, 0.4],
+            scale: [1.2, 1, 1.2],
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
+        
+        {/* Floating particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Grid pattern */}
         <motion.div
-          className="absolute bottom-32 left-1/3 w-4 h-4 bg-pink-400/20 rounded-full"
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.3, 1],
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "50px 50px",
+            y,
           }}
-          transition={{ duration: 5, repeat: Infinity, delay: 2 }}
         />
       </motion.div>
 
-      <div className="max-w-7xl mx-auto">
-        <ScrollReveal direction="up" delay={0.2}>
-          <div className="text-center mb-8 md:mb-12">
-            <motion.h2
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 bg-clip-text text-transparent transition-all duration-500"
-              style={{
-                backgroundImage:
-                  "linear-gradient(270deg, #06b6d4, #a78bfa, #f472b6, #06b6d4)",
-                backgroundSize: "600% 600%",
-                animation: "gradientMove 4s ease infinite",
-              }}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              Skills & Technologies
-            </motion.h2>
-
-            <motion.div
-              className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-5 md:mb-8 rounded-full"
-              initial={{ scaleX: 0 }}
-              animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            />
-
-            <style>
-              {`
-                @keyframes gradientMove {
-                  0% { background-position: 0% 50%; }
-                  50% { background-position: 100% 50%; }
-                  100% { background-position: 0% 50%; }
-                }
-              `}
-            </style>
-
-            <motion.p
-              className="text-base sm:text-lg md:text-xl text-white/80 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-            >
-              Technologies I work with to build modern web applications
-            </motion.p>
-          </div>
-        </ScrollReveal>
-
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Header (from About section style) */}
         <motion.div
-          className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
+          className="text-center mb-16 md:mb-20"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          {/* Enhanced 3D Skills Visualization */}
           <motion.div
-            className="w-full lg:w-1/2 flex-shrink-0 order-2 lg:order-1"
+            className="inline-flex items-center gap-2 mb-4"
+            variants={titleVariants}
+          >
+            <Sparkles className="w-5 h-5 text-cyan-400" />
+            <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">
+              Technical Expertise
+            </span>
+            <Sparkles className="w-5 h-5 text-cyan-400" />
+          </motion.div>
+
+          <motion.h2
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
+            variants={titleVariants}
+          >
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Skills & Technologies
+            </span>
+          </motion.h2>
+
+          <motion.div
+            className="w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto"
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          />
+        </motion.div>
+
+        <motion.div
+          className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          {/* 3D Skills Visualization */}
+          <motion.div
+            className="w-full lg:w-1/2 flex-shrink-0"
             variants={itemVariants}
+            animate={floatingAnimation}
           >
             <motion.div
-              className="relative w-full h-64 xs:h-72 sm:h-80 md:h-96 lg:h-[32rem] p-4"
+              className="relative w-full h-[400px] lg:h-[500px]"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Canvas
                 camera={{ position: [0, 0, 10], fov: 70 }}
-                gl={{ alpha: true }} // ✅ allow transparency
+                gl={{ alpha: true }}
               >
                 <ambientLight intensity={0.7} />
                 <pointLight position={[12, 12, 12]} intensity={1.5} />
@@ -307,129 +362,100 @@ export default function Skills() {
                   enablePan={false}
                 />
               </Canvas>
-
-              {/* Optional: remove this if you want ZERO overlay */}
-              {/* <motion.div
-      className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1 }}
-    /> */}
             </motion.div>
           </motion.div>
 
-          {/* Enhanced Skills Categories - Horizontal Layout */}
+          {/* Skills Categories */}
           <motion.div
-            className="w-full lg:w-1/2 space-y-8 order-1 lg:order-2"
-            variants={itemVariants}
+            className="w-full lg:w-1/2 space-y-8"
+            variants={containerVariants}
           >
-            <motion.h3
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6 text-center lg:text-left"
-              variants={itemVariants}
-            >
-              Technical Expertise
-            </motion.h3>
+            {Object.entries(categories).map(([category, categorySkills], categoryIndex) => (
+              <motion.div
+                key={category}
+                className="space-y-4"
+                variants={itemVariants}
+              >
+                <motion.h3
+                  className="text-xl md:text-2xl font-semibold text-cyan-400"
+                  whileHover={{ x: 10, color: "#06b6d4" }}
+                >
+                  {category}
+                </motion.h3>
 
-            <AnimatePresence>
-              {Object.entries(categories).map(
-                ([category, categorySkills], categoryIndex) => (
-                  <motion.div
-                    key={category}
-                    className="space-y-4"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={
-                      isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }
-                    }
-                    transition={{ delay: categoryIndex * 0.2 + 0.5 }}
-                  >
-                    <motion.h4
-                      className="text-lg md:text-xl font-semibold text-cyan-400 mb-3"
-                      whileHover={{ x: 10, color: "#06b6d4" }}
-                    >
-                      {category}
-                    </motion.h4>
-
-                    {/* Horizontal Skills Row */}
+                <motion.div
+                  className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                  variants={containerVariants}
+                >
+                  {categorySkills.map((skill, index) => (
                     <motion.div
-                      className="flex flex-wrap gap-3"
-                      variants={containerVariants}
+                      key={skill.name}
+                      className="group relative p-4 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 cursor-pointer overflow-hidden"
+                      variants={cardVariants}
+                      custom={index}
+                      whileHover="hover"
                     >
-                      {categorySkills.map((skill, index) => (
+                      {/* Skill content */}
+                      <div className="flex items-center gap-3">
                         <motion.div
-                          key={skill.name}
-                          className="group relative px-4 py-3 glass-card cursor-pointer overflow-hidden flex-shrink-0 min-w-fit"
-                          variants={skillCardVariants}
-                          custom={index}
-                          whileHover="hover"
-                          layout
-                        >
-                          <div className="flex items-center gap-3">
-                            <motion.div
-                              className="w-3 h-3 rounded-full shadow-lg"
-                              style={{
-                                backgroundColor: skill.color,
-                                boxShadow: `0 0 10px ${skill.color}60`,
-                              }}
-                              whileHover={{
-                                scale: 1.2,
-                                boxShadow: `0 0 20px ${skill.color}80`,
-                              }}
-                            />
-                            <motion.h5
-                              className="text-white font-medium text-sm group-hover:text-cyan-400 transition-colors whitespace-nowrap"
-                              whileHover={{ x: 2 }}
-                            >
-                              {skill.name}
-                            </motion.h5>
-                            <motion.span
-                              className="text-xs text-white/60 font-mono ml-2"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 1 }}
-                            >
-                              {skill.level}%
-                            </motion.span>
-                          </div>
+                          className="w-3 h-3 rounded-full"
+                          style={{
+                            backgroundColor: skill.color,
+                            boxShadow: `0 0 10px ${skill.color}60`,
+                          }}
+                          whileHover={{
+                            scale: 1.2,
+                            boxShadow: `0 0 20px ${skill.color}80`,
+                          }}
+                        />
+                        <span className="text-white font-medium text-sm group-hover:text-cyan-400 transition-colors">
+                          {skill.name}
+                        </span>
+                      </div>
 
-                          {/* Mini Progress Bar */}
-                          <div className="w-full bg-white/10 rounded-full h-1 mt-2 overflow-hidden">
-                            <motion.div
-                              className="h-full rounded-full"
-                              style={{
-                                background: `linear-gradient(90deg, ${skill.color}, ${skill.color}80)`,
-                              }}
-                              variants={progressBarVariants}
-                              custom={skill.level}
-                              initial="hidden"
-                              animate={isInView ? "visible" : "hidden"}
-                            />
-                          </div>
+                      {/* Progress bar */}
+                      <div className="w-full bg-white/10 rounded-full h-1 mt-3 overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{
+                            background: `linear-gradient(90deg, ${skill.color}, ${skill.color}80)`,
+                          }}
+                          initial={{ width: 0 }}
+                          animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
+                          transition={{ duration: 1.5, delay: 0.5 + index * 0.1 }}
+                        />
+                      </div>
 
-                          {/* Hover effect overlay */}
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 rounded-xl"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileHover={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        </motion.div>
-                      ))}
+                      {/* Level indicator */}
+                      <motion.span
+                        className="absolute top-2 right-2 text-xs text-white/60 font-mono"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1 }}
+                      >
+                        {skill.level}%
+                      </motion.span>
+
+                      {/* Hover effect overlay */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 opacity-0"
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
                     </motion.div>
-                  </motion.div>
-                )
-              )}
-            </AnimatePresence>
+                  ))}
+                </motion.div>
+              </motion.div>
+            ))}
 
             {/* Currently Learning Section */}
             <motion.div
-              className="mt-8 p-6 glass-card"
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ delay: 1.5 }}
-              whileHover={{ scale: 1.02 }}
+              className="p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02, borderColor: "rgba(6, 182, 212, 0.3)" }}
             >
               <motion.h4
-                className="text-lg md:text-xl font-semibold text-white mb-4"
+                className="text-xl font-semibold text-white mb-4"
                 whileHover={{ color: "#06b6d4" }}
               >
                 Currently Learning
@@ -438,28 +464,18 @@ export default function Skills() {
               <motion.div
                 className="flex flex-wrap gap-3"
                 variants={containerVariants}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
               >
-                {[
-                  "GraphQL",
-                  "Redux Toolkit",
-                  "Socket.io",
-                  "Jest",
-                  "Firebase",
-                  "AWS",
-                ].map((tech, index) => (
+                {["GraphQL", "Redux Toolkit", "Socket.io", "Jest", "Firebase", "AWS"].map((tech, index) => (
                   <motion.span
                     key={tech}
-                    className="px-3 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full text-white/90 text-sm border border-white/20 cursor-pointer"
-                    variants={itemVariants}
+                    className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-sm font-medium"
+                    variants={cardVariants}
+                    custom={index}
                     whileHover={{
                       scale: 1.1,
-                      backgroundColor: "rgba(6, 182, 212, 0.2)",
+                      backgroundColor: "rgba(6, 182, 212, 0.15)",
                       borderColor: "rgba(6, 182, 212, 0.5)",
                     }}
-                    whileTap={{ scale: 0.95 }}
-                    custom={index}
                   >
                     {tech}
                   </motion.span>

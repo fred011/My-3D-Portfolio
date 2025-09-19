@@ -27,11 +27,6 @@ export default function App() {
     return () => clearTimeout(loadingTimer);
   }, []);
 
-  // Show loading screen during initial load
-  if (!isMounted || isLoading) {
-    return <LoadingScreen />;
-  }
-
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
     in: { opacity: 1, y: 0 },
@@ -46,42 +41,49 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <AnimatePresence mode="wait">
-        <motion.div 
-          className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen relative overflow-hidden"
-          initial="initial"
-          animate="in"
-          exit="out"
-          variants={pageVariants}
-          transition={pageTransition}
-        >
-          {/* Background Effects */}
-          <ErrorBoundary>
-            <StarField />
-            <MouseTracker />
-          </ErrorBoundary>
-
-          {/* Main Content */}
-          <ErrorBoundary>
-            <Navigation />
-          </ErrorBoundary>
-          
-          <ErrorBoundary>
-            <motion.main
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.2 }}
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen relative overflow-hidden">
+        <AnimatePresence mode="wait">
+          {(!isMounted || isLoading) ? (
+            <LoadingScreen key="loading" />
+          ) : (
+            <motion.div 
+              key="main-content"
+              className="min-h-screen relative overflow-hidden"
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
             >
-              <Hero />
-              <About />
-              <Skills />
-              <Experience />
-              <Projects />
-              <Contact />
-            </motion.main>
-          </ErrorBoundary>
-        </motion.div>
-      </AnimatePresence>
+              {/* Background Effects */}
+              <ErrorBoundary>
+                <StarField />
+                <MouseTracker />
+              </ErrorBoundary>
+
+              {/* Main Content */}
+              <ErrorBoundary>
+                <Navigation />
+              </ErrorBoundary>
+              
+              <ErrorBoundary>
+                <motion.main
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                >
+                  <Hero />
+                  <About />
+                  <Skills />
+                  <Experience />
+                  <Projects />
+                  <Contact />
+                </motion.main>
+              </ErrorBoundary>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </ErrorBoundary>
   );
 }
