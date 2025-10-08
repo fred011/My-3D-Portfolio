@@ -375,8 +375,8 @@ export default function Projects() {
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.6 }}
                     onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center hidden">
@@ -388,8 +388,7 @@ export default function Projects() {
 
                   {/* Overlay with actions */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center gap-4"
-                    initial={{ opacity: 0 }}
+                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center gap-4 md:opacity-0 opacity-100"
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
@@ -398,7 +397,7 @@ export default function Projects() {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                        className="p-3 bg-white/10 cursor-pointer backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
                         whileHover={{ scale: 1.1, rotate: 360 }}
                         whileTap={{ scale: 0.9 }}
                       >
@@ -409,7 +408,7 @@ export default function Projects() {
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                      className="p-3 bg-white/10 cursor-pointer backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
@@ -498,8 +497,8 @@ export default function Projects() {
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.6 }}
                     onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center hidden">
@@ -511,8 +510,7 @@ export default function Projects() {
 
                   {/* Overlay with actions */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center gap-3"
-                    initial={{ opacity: 0 }}
+                    className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center cursor-pointer gap-3 md:opacity-0 opacity-100"
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
@@ -521,7 +519,7 @@ export default function Projects() {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                        className="p-2 bg-white/10 cursor-pointer backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
                         whileHover={{ scale: 1.1, rotate: 360 }}
                         whileTap={{ scale: 0.9 }}
                       >
@@ -532,7 +530,7 @@ export default function Projects() {
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
+                      className="p-2 bg-white/10 cursor-pointer backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
