@@ -19,7 +19,7 @@ export default function StarField() {
     };
 
     const stars = [];
-    const numStars = 50;
+    const numStars = 30;
 
     // Create stars
     for (let i = 0; i < numStars; i++) {
