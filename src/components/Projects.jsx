@@ -387,9 +387,9 @@ export default function Projects() {
                   <p className="text-white/90 text-sm leading-relaxed">
                     This portfolio includes both personal projects and
                     professional client work. Some projects were developed in
-                    collaboration with teams. GitHub repositories are shared
-                    where permitted by clients and collaborators. All client
-                    work is showcased with proper authorization.
+                    collaboration with teams. GitHub repositories shared where
+                    permitted by clients and collaborators. All client work is
+                    showcased with proper authorization.
                   </p>
                 </div>
               </div>
