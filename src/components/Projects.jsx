@@ -15,6 +15,8 @@ import {
   Sparkles,
   Code2,
   Folder,
+  Info,
+  Users,
 } from "lucide-react";
 
 export default function Projects() {
@@ -145,6 +147,18 @@ export default function Projects() {
       technologies: ["WordPress", "Tutor LMS", "PHP", "MySQL", "CSS"],
       liveUrl: "https://silulocollege.erisngraduate.com/",
       githubUrl: "",
+      featured: true,
+      color: "from-pink-500 to-rose-600",
+    },
+    {
+      id: 6,
+      title: "Coastal Beach Resort",
+      description:
+        "Coastal Beach Resort is a modern and responsive web platform designed to showcase resort accommodations, services, and activities. Built with the MERN stack, it offers a smooth booking experience, stunning visuals, and an elegant interface that captures the serene beauty of coastal living.",
+      image: "/cbr.png",
+      technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
+      liveUrl: "https://www.coastalbeach.co.za/",
+      githubUrl: "https://github.com/erisndev/Coastal-Beach-Resort",
       featured: true,
       color: "from-pink-500 to-rose-600",
     },
@@ -345,6 +359,42 @@ export default function Projects() {
             animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           />
+
+          {/* Disclaimer Note */}
+          <motion.div
+            className="mt-8 max-w-3xl mx-auto"
+            variants={itemVariants}
+          >
+            <motion.div
+              className="bg-white/5 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6"
+              whileHover={{
+                scale: 1.02,
+                borderColor: "rgba(6, 182, 212, 0.4)",
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="p-2 bg-cyan-500/10 rounded-lg">
+                    <Info className="w-5 h-5 text-cyan-400" />
+                  </div>
+                </div>
+                <div className="flex-1 text-left">
+                  <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-cyan-400" />
+                    About These Projects
+                  </h4>
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    This portfolio includes both personal projects and
+                    professional client work. Some projects were developed in
+                    collaboration with teams. GitHub repositories are shared
+                    where permitted by clients and collaborators. All client
+                    work is showcased with proper authorization.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
 
         {/* Featured Projects Grid */}

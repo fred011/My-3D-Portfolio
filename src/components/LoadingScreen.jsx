@@ -9,9 +9,7 @@ export default function LoadingScreen() {
 
   const loadingMessages = [
     "Initializing system",
-    "Loading creative assets",
     "Preparing interface",
-    "Optimizing experience",
     "Almost ready",
     "Welcome aboard",
   ];

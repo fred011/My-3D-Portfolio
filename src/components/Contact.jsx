@@ -37,7 +37,7 @@ export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -64,11 +64,11 @@ export default function Contact() {
   };
 
   const titleVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       scale: 0.9,
-      filter: "blur(10px)"
+      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
@@ -234,7 +234,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative py-20 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
       ref={sectionRef}
     >
       {/* Enhanced animated background matching other sections */}
@@ -258,7 +258,7 @@ export default function Contact() {
           }}
           transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
-        
+
         {/* Floating particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -335,7 +335,8 @@ export default function Contact() {
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto"
             variants={itemVariants}
           >
-            Ready to work together? Let's discuss your project and create something amazing.
+            Ready to work together? Let's discuss your project and create
+            something amazing.
           </motion.p>
         </motion.div>
 
@@ -349,7 +350,7 @@ export default function Contact() {
           <motion.div
             className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden"
             variants={itemVariants}
-            whileHover={{ 
+            whileHover={{
               borderColor: "rgba(6, 182, 212, 0.3)",
             }}
           >
@@ -357,15 +358,23 @@ export default function Contact() {
             <motion.div className="mb-8">
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full mb-4"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(6, 182, 212, 0.15)" }}
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: "rgba(6, 182, 212, 0.15)",
+                }}
               >
                 <MessageSquare className="w-4 h-4 text-cyan-400" />
-                <span className="text-cyan-400 text-sm font-medium">Send a Message</span>
+                <span className="text-cyan-400 text-sm font-medium">
+                  Send a Message
+                </span>
               </motion.div>
-              
+
               <h3 className="text-2xl font-bold text-white">
                 Let's Build Something
-                <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"> Together</span>
+                <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                  {" "}
+                  Together
+                </span>
               </h3>
             </motion.div>
 
@@ -405,7 +414,8 @@ export default function Contact() {
                   <AlertCircle className="w-5 h-5 text-red-400 mt-0.5" />
                   <div className="flex-1">
                     <span className="text-red-400">
-                      Failed to send message. Please try again or contact me directly.
+                      Failed to send message. Please try again or contact me
+                      directly.
                     </span>
                   </div>
                   <button
@@ -517,7 +527,7 @@ export default function Contact() {
                 whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                 whileTap={!isSubmitting ? { scale: 0.98 } : {}}
               >
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500"
                   initial={{ x: "100%" }}
                   whileHover={{ x: 0 }}
@@ -528,7 +538,11 @@ export default function Contact() {
                     <motion.div
                       className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     />
                     <span className="relative z-10">Sending...</span>
                   </>
@@ -558,7 +572,7 @@ export default function Contact() {
                   key={index}
                   href={info.href}
                   className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden flex items-center gap-4"
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.02,
                     borderColor: "rgba(6, 182, 212, 0.3)",
                   }}
@@ -573,11 +587,11 @@ export default function Contact() {
                   </motion.div>
                   <div>
                     <p className="text-white/60 text-sm">{info.label}</p>
-                    <p className="text-white font-medium text-lg">{info.value}</p>
+                    <p className="text-white font-medium text-lg">
+                      {info.value}
+                    </p>
                   </div>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-purple-500/0 to-pink-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
-                  />
+                  <motion.div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-purple-500/0 to-pink-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
                 </motion.a>
               ))}
             </div>
@@ -599,7 +613,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:border-cyan-400/50"
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.1,
                       backgroundColor: "rgba(6, 182, 212, 0.2)",
                     }}
@@ -614,7 +628,7 @@ export default function Contact() {
             {/* Availability Card */}
             <motion.div
               className="p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-md border border-white/10"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 borderColor: "rgba(6, 182, 212, 0.3)",
               }}
@@ -627,12 +641,17 @@ export default function Contact() {
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-green-400 text-sm font-medium">Available for Work</span>
+                <span className="text-green-400 text-sm font-medium">
+                  Available for Work
+                </span>
               </motion.div>
-              <h4 className="text-xl font-semibold text-white mb-2">Open to Opportunities</h4>
+              <h4 className="text-xl font-semibold text-white mb-2">
+                Open to Opportunities
+              </h4>
               <p className="text-white/70">
-                I'm currently seeking internships, entry-level positions, and freelance opportunities 
-                to grow my skills and contribute to exciting projects!
+                I'm currently seeking internships, entry-level positions, and
+                freelance opportunities to grow my skills and contribute to
+                exciting projects!
               </p>
             </motion.div>
           </motion.div>
@@ -640,13 +659,14 @@ export default function Contact() {
 
         {/* Footer */}
         <motion.div
-          className="mt-20 pt-8 border-t border-white/10 text-center"
+          className="mt-16 pt-6 border-t border-white/10 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           <p className="text-white/60 text-sm">
-            © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with React, Three.js, and 
+            © {new Date().getFullYear()} Ferdinand Mphahle Morena. Built with
+            React, Three.js, and
             <motion.span
               className="inline-block ml-1 text-red-500"
               animate={{ scale: [1, 1.2, 1] }}

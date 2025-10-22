@@ -139,7 +139,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative min-h-screen py-20 md:py-15 px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
       {/* Enhanced animated background matching About section */}
       <motion.div className="absolute inset-0 pointer-events-none">
@@ -337,7 +337,9 @@ export default function Hero() {
             >
               <motion.button
                 onClick={() => {
-                  document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .getElementById("projects")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -354,7 +356,9 @@ export default function Hero() {
 
               <motion.button
                 onClick={() => {
-                  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-cyan-400/30 text-white font-semibold rounded-xl backdrop-blur-sm hover:bg-cyan-400/10 transition-all"
                 whileHover={{ scale: 1.05, y: -2 }}
