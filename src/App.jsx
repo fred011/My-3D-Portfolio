@@ -7,8 +7,6 @@ import Projects from "./components/Projects.jsx";
 import Contact from "./components/Contact.jsx";
 import Navigation from "./components/Navigation.jsx";
 import LoadingScreen from "./components/LoadingScreen.jsx";
-import StarField from "./components/StarField.jsx";
-import MouseTracker from "./components/MouseTracker.jsx";
 import Experience from "./components/Experience.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
@@ -55,12 +53,6 @@ export default function App() {
               variants={pageVariants}
               transition={pageTransition}
             >
-              {/* Background Effects */}
-              <ErrorBoundary>
-                <StarField />
-                <MouseTracker />
-              </ErrorBoundary>
-
               {/* Main Content */}
               <ErrorBoundary>
                 <Navigation />

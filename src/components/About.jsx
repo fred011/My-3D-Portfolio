@@ -248,29 +248,6 @@ export default function About() {
           transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
 
-        {/* Floating particles */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-
         {/* Grid pattern */}
         <motion.div
           className="absolute inset-0 opacity-[0.03]"
@@ -563,32 +540,7 @@ export default function About() {
                 transition={{ duration: 0.3 }}
               />
 
-              {/* Floating particles on hover */}
-              {hoveredCard === index && (
-                <>
-                  {[...Array(3)].map((_, i) => (
-                    <motion.div
-                      key={`hover-particle-${i}`}
-                      className="absolute w-1 h-1 bg-white rounded-full"
-                      initial={{
-                        x: Math.random() * 100,
-                        y: 100,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        y: -20,
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: 1,
-                        delay: i * 0.1,
-                        repeat: Infinity,
-                      }}
-                    />
-                  ))}
-                </>
-              )}
-            </motion.div>
+              </motion.div>
           ))}
         </motion.div>
       </div>

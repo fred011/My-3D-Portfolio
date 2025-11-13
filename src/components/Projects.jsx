@@ -79,7 +79,7 @@ export default function Projects() {
         "JWT",
       ],
       liveUrl: "https://chat-app-xh2t.onrender.com",
-      githubUrl: "https://github.com/fred011/Chat-App",
+      githubUrl: "https://github.com/FerdinandMorena/Chat-App",
       featured: true,
       color: "from-cyan-500 to-blue-600",
     },
@@ -98,7 +98,7 @@ export default function Projects() {
         "JWT",
       ],
       liveUrl: "https://twitter-clone-i8jj.onrender.com",
-      githubUrl: "https://github.com/fred011/twitter-clone",
+      githubUrl: "https://github.com/FerdinandMorena/twitter-clone",
       featured: true,
       color: "from-purple-500 to-violet-600",
     },
@@ -110,7 +110,7 @@ export default function Projects() {
       image: "/weather app.png",
       technologies: ["HTML", "CSS", "JavaScript", "OpenWeatherMap API"],
       liveUrl: "https://weather-app-six-phi-85.vercel.app/",
-      githubUrl: "https://github.com/fred011/Weather-App",
+      githubUrl: "https://github.com/FerdinandMorena/Weather-App",
       featured: false,
       color: "from-green-500 to-emerald-600",
     },
@@ -122,7 +122,7 @@ export default function Projects() {
       image: "/crud.png",
       technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
       liveUrl: "https://mern-products-crud.onrender.com/",
-      githubUrl: "https://github.com/fred011/mern-products-crud-",
+      githubUrl: "https://github.com/FerdinandMorena/mern-products-crud-",
       featured: false,
       color: "from-pink-500 to-rose-600",
     },
@@ -287,29 +287,6 @@ export default function Projects() {
           }}
           transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
-
-        {/* Floating particles */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
 
         {/* Grid pattern */}
         <motion.div
@@ -643,7 +620,7 @@ export default function Projects() {
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.a
-            href="https://github.com/fred011?tab=repositories"
+            href="https://github.com/FerdinandMorena?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/25 transition-all"
