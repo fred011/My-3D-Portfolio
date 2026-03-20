@@ -1,11 +1,10 @@
 import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   Calendar,
   MapPin,
   Briefcase,
   Award,
-  Code2,
   Sparkles,
   CheckCircle,
   ArrowRight,
@@ -13,14 +12,7 @@ import {
 
 export default function Experience() {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [150, -150]);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const experiences = [
     {
@@ -44,6 +36,9 @@ export default function Experience() {
         "Express",
         "Tailwind CSS",
         "TypeScript",
+        "Next.js",
+        "Wordpress",
+        "Git and Github",
       ],
       color: "from-cyan-500 to-blue-600",
       dotColor: "bg-cyan-500",
@@ -51,66 +46,20 @@ export default function Experience() {
     },
   ];
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        delayChildren: 0.2,
-        staggerChildren: 0.2,
-      },
+      transition: { delayChildren: 0.1, staggerChildren: 0.1 },
     },
   };
 
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      x: -50,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      x: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        duration: 0.8,
-      },
-    },
-  };
-
-  const titleVariants = {
-    hidden: {
-      opacity: 0,
-      y: 50,
-      scale: 0.9,
-      filter: "blur(10px)",
-    },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        duration: 0.8,
-      },
-    },
-  };
-
-  const timelineVariants = {
-    hidden: { scaleY: 0 },
-    visible: {
-      scaleY: 1,
-      transition: {
-        duration: 1,
-        ease: "easeInOut",
-      },
+      transition: { type: "spring", stiffness: 100, damping: 18 },
     },
   };
 
@@ -120,28 +69,11 @@ export default function Experience() {
       className="relative min-h-screen py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
       ref={sectionRef}
     >
-      {/* Enhanced animated background */}
-      <motion.div className="absolute inset-0 pointer-events-none">
-        {/* Gradient orbs */}
-        <motion.div
-          className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-        />
-
-        {/* Grid pattern */}
-        <motion.div
+      {/* Static background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
@@ -149,10 +81,9 @@ export default function Experience() {
               linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
             `,
             backgroundSize: "50px 50px",
-            y,
           }}
         />
-      </motion.div>
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
@@ -164,7 +95,7 @@ export default function Experience() {
         >
           <motion.div
             className="inline-flex items-center gap-2 mb-4"
-            variants={titleVariants}
+            variants={itemVariants}
           >
             <Sparkles className="w-5 h-5 text-cyan-400" />
             <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">
@@ -175,7 +106,7 @@ export default function Experience() {
 
           <motion.h2
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
-            variants={titleVariants}
+            variants={itemVariants}
           >
             <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Experience
@@ -186,232 +117,142 @@ export default function Experience() {
             className="w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto"
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           />
         </motion.div>
 
-        {/* Timeline Container */}
+        {/* Experience Cards */}
         <motion.div
-          className="relative"
+          className="relative max-w-4xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          {/* Central Timeline Line */}
+          {/* Timeline Line — desktop only */}
           <motion.div
-            className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-1 h-full bg-gradient-to-b from-cyan-400 via-purple-400 to-pink-400"
-            variants={timelineVariants}
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-cyan-400 via-purple-400 to-pink-400"
+            initial={{ scaleY: 0 }}
+            animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+            transition={{ duration: 0.8 }}
             style={{ originY: 0 }}
           />
 
-          {/* Experience Items */}
           {experiences.map((exp, index) => (
             <motion.div
               key={exp.id}
-              className={`relative flex items-start mb-16 ${
-                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              }`}
-              variants={cardVariants}
+              className="relative mb-12 last:mb-0"
+              variants={itemVariants}
             >
-              {/* Timeline Dot with Pulse */}
-              <motion.div
-                className="absolute left-8 md:left-1/2 transform -translate-x-1/2 z-20"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{
-                  delay: index * 0.2,
-                  type: "spring",
-                  stiffness: 200,
-                }}
-              >
-                <motion.div
-                  className={`w-6 h-6 ${exp.dotColor} rounded-full border-4 border-white shadow-lg`}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    boxShadow: [
-                      "0 0 0 0 rgba(6, 182, 212, 0.4)",
-                      "0 0 0 20px rgba(6, 182, 212, 0)",
-                      "0 0 0 0 rgba(6, 182, 212, 0)",
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.5,
-                  }}
-                />
-                {/* Icon in center of dot */}
-                <motion.div
-                  className={`absolute -top-2 -left-2 w-10 h-10 rounded-full bg-gradient-to-r ${exp.color} flex items-center justify-center shadow-xl`}
-                  whileHover={{ scale: 1.2, rotate: 360 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                >
+              {/* Timeline Dot — desktop only */}
+              <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 z-20">
+                <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${exp.color} flex items-center justify-center shadow-xl`}>
                   <exp.icon className="w-5 h-5 text-white" />
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
 
-              {/* Content Card */}
-              <motion.div
-                className={`ml-20 md:ml-0 md:w-1/2 ${
-                  index % 2 === 0 ? "md:pr-16 md:text-right" : "md:pl-16"
-                }`}
-              >
-                <motion.div
-                  className="relative p-6 md:p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden group"
-                  whileHover={{
-                    scale: 1.02,
-                    borderColor: "rgba(6, 182, 212, 0.3)",
-                    boxShadow: "0 20px 40px rgba(6, 182, 212, 0.15)",
-                  }}
-                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                >
-                  {/* Card Header */}
-                  <div
-                    className={`mb-4 ${index % 2 === 0 ? "md:text-right" : ""}`}
-                  >
-                    <motion.div
-                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${exp.color} text-white text-sm mb-3`}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Calendar className="w-4 h-4" />
-                      {exp.duration}
-                    </motion.div>
+              {/* Card — full width on mobile, offset on desktop */}
+              <div className={`md:w-[calc(50%-2rem)] ${index % 2 === 0 ? "md:mr-auto md:pr-4" : "md:ml-auto md:pl-4"}`}>
+                <div className="relative p-5 sm:p-6 md:p-8 rounded-2xl bg-white/5 border border-white/10 overflow-hidden group hover:border-cyan-500/20 transition-colors duration-300">
+                  {/* Mobile icon + duration row */}
+                  <div className="flex items-center gap-3 mb-4 md:hidden">
+                    <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${exp.color} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                      <exp.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white font-bold text-lg leading-tight">{exp.title}</p>
+                      <p className="text-purple-400 text-sm font-semibold">{exp.company}</p>
+                    </div>
+                  </div>
 
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  {/* Desktop header */}
+                  <div className={`hidden md:block mb-4 ${index % 2 === 0 ? "md:text-right" : ""}`}>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors duration-300">
                       {exp.title}
                     </h3>
-
                     <p className="text-lg font-semibold text-purple-400 mb-1">
                       {exp.company}
                     </p>
+                  </div>
 
-                    <div
-                      className={`flex items-center gap-2 text-white/60 text-sm ${
-                        index % 2 === 0 ? "md:justify-end" : ""
-                      }`}
-                    >
-                      <MapPin className="w-4 h-4" />
+                  {/* Duration & Location */}
+                  <div className={`flex flex-wrap items-center gap-3 mb-4 ${index % 2 === 0 ? "md:justify-end" : ""}`}>
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r ${exp.color} text-white text-xs sm:text-sm`}>
+                      <Calendar className="w-3.5 h-3.5" />
+                      {exp.duration}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-white/60 text-xs sm:text-sm">
+                      <MapPin className="w-3.5 h-3.5" />
                       {exp.location}
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p
-                    className={`text-white/80 mb-6 leading-relaxed ${
-                      index % 2 === 0 ? "md:text-right" : ""
-                    }`}
-                  >
+                  <p className={`text-white/80 text-sm sm:text-base mb-5 leading-relaxed ${index % 2 === 0 ? "md:text-right" : ""}`}>
                     {exp.description}
                   </p>
 
                   {/* Achievements */}
-                  <div className="mb-6">
-                    <h4
-                      className={`text-sm font-semibold text-cyan-400 mb-3 flex items-center gap-2 ${
-                        index % 2 === 0 ? "md:justify-end" : ""
-                      }`}
-                    >
+                  <div className="mb-5">
+                    <h4 className={`text-sm font-semibold text-cyan-400 mb-3 flex items-center gap-2 ${index % 2 === 0 ? "md:justify-end" : ""}`}>
                       <CheckCircle className="w-4 h-4" />
                       Key Achievements
                     </h4>
                     <ul className="space-y-2">
                       {exp.achievements.map((achievement, i) => (
-                        <motion.li
+                        <li
                           key={i}
-                          className={`flex items-start gap-2 text-white/70 text-sm ${
-                            index % 2 === 0
-                              ? "md:flex-row-reverse md:text-right"
-                              : ""
-                          }`}
-                          initial={{
-                            opacity: 0,
-                            x: index % 2 === 0 ? 20 : -20,
-                          }}
-                          animate={isInView ? { opacity: 1, x: 0 } : {}}
-                          transition={{ delay: index * 0.1 + i * 0.05 }}
+                          className={`flex items-start gap-2 text-white/70 text-sm ${index % 2 === 0 ? "md:flex-row-reverse md:text-right" : ""}`}
                         >
-                          <ArrowRight
-                            className={`w-3 h-3 text-cyan-400 mt-1 flex-shrink-0 ${
-                              index % 2 === 0 ? "rotate-180" : ""
-                            }`}
-                          />
+                          <ArrowRight className={`w-3 h-3 text-cyan-400 mt-1 flex-shrink-0 ${index % 2 === 0 ? "md:rotate-180" : ""}`} />
                           <span>{achievement}</span>
-                        </motion.li>
+                        </li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Technologies */}
-                  <div
-                    className={`flex flex-wrap gap-2 ${
-                      index % 2 === 0 ? "md:justify-end" : ""
-                    }`}
-                  >
-                    {exp.technologies.map((tech, i) => (
-                      <motion.span
+                  <div className={`flex flex-wrap gap-1.5 sm:gap-2 ${index % 2 === 0 ? "md:justify-end" : ""}`}>
+                    {exp.technologies.map((tech) => (
+                      <span
                         key={tech}
-                        className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-lg text-white/80 text-xs border border-white/20 hover:border-cyan-400/50 hover:bg-cyan-400/10 transition-all"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ delay: index * 0.1 + i * 0.03 }}
-                        whileHover={{ scale: 1.05 }}
+                        className="px-2.5 py-1 bg-white/10 rounded-lg text-white/80 text-xs border border-white/20 hover:border-cyan-400/50 hover:bg-cyan-400/10 transition-colors duration-300"
                       >
                         {tech}
-                      </motion.span>
+                      </span>
                     ))}
                   </div>
-
-                  {/* Hover Gradient Overlay */}
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-purple-500/0 to-pink-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none rounded-2xl" />
-                </motion.div>
-              </motion.div>
-
-              {/* Empty space for alternating layout */}
-              <div className="hidden md:block md:w-1/2" />
+                </div>
+              </div>
             </motion.div>
           ))}
 
-          {/* Timeline End Marker */}
+          {/* Timeline End — desktop only */}
           <motion.div
-            className="absolute left-8 md:left-1/2 transform -translate-x-1/2 bottom-0"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 bottom-0"
             initial={{ scale: 0 }}
             animate={isInView ? { scale: 1 } : { scale: 0 }}
-            transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
+            transition={{ delay: 0.5 }}
           >
-            <div className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-pulse" />
+            <div className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full" />
           </motion.div>
         </motion.div>
 
         {/* CTA Button */}
         <motion.div
           className="text-center mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ delay: 0.5 }}
         >
-          <motion.a
+          <a
             href="/Ferdinand_Morena_CV.pdf"
             download
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl text-white font-semibold text-lg relative overflow-hidden group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl text-white font-semibold text-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all hover:scale-105 active:scale-95"
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500"
-              initial={{ x: "100%" }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.3 }}
-            />
-            <Award className="w-5 h-5 relative z-10" />
-            <span className="relative z-10">Download Resume</span>
-            <motion.span
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="relative z-10"
-            >
-              →
-            </motion.span>
-          </motion.a>
+            <Award className="w-5 h-5" />
+            <span>Download Resume</span>
+            <span>→</span>
+          </a>
         </motion.div>
       </div>
     </section>
