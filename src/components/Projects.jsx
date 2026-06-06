@@ -26,90 +26,6 @@ const projects = [
   },
   {
     id: 2,
-    title: "SCDP",
-    description:
-      "A professional corporate website for SCDP, featuring a clean modern design, responsive layout, and informative sections to showcase the company's services and brand identity.",
-    image: "/scdp.png",
-    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
-    liveUrl: "https://scdp.co.za/",
-    githubUrl: "",
-    category: "Frontend",
-    color: "#06b6d4",
-  },
-  {
-    id: 3,
-    title: "Joe's Plumbing",
-    description:
-      "A professional service website for a plumbing business, featuring service listings, contact information, and a clean design that builds trust and drives customer inquiries.",
-    image: "/joe.png",
-    technologies: ["React", "CSS", "JavaScript", "Vercel"],
-    liveUrl: "https://joe-s-plumbing.vercel.app/",
-    githubUrl: "",
-    category: "Frontend",
-    color: "#fbbf24",
-  },
-  {
-    id: 4,
-    title: "GetThru",
-    description:
-      "A sleek and engaging frontend website for GetThru, designed to deliver a compelling user experience with modern UI patterns, smooth interactions, and a fully responsive layout.",
-    image: "/gett.png",
-    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
-    liveUrl: "https://getthru.co.za/",
-    githubUrl: "",
-    category: "Frontend",
-    color: "#34d399",
-  },
-  {
-    id: 5,
-    title: "TechnoRain",
-    description:
-      "A modern corporate website for TechnoRain, showcasing technology solutions and services with a professional design, intuitive navigation, and responsive layout across all devices.",
-    image: "/techno.png",
-    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
-    liveUrl: "https://www.technorain.co.za/",
-    githubUrl: "",
-    category: "Frontend",
-    color: "#a78bfa",
-  },
-  {
-    id: 6,
-    title: "Amantungwa",
-    description:
-      "A professional WordPress website for Amantungwa, featuring an elegant design that highlights the organization's mission, services, and community impact. Built with a user-friendly layout, responsive design, and easy content management.",
-    image: "/aman.png",
-    technologies: ["WordPress", "PHP", "MySQL", "CSS"],
-    liveUrl: "https://amantungwa.co.za/",
-    githubUrl: "",
-    category: "WordPress",
-    color: "#f97316",
-  },
-  {
-    id: 7,
-    title: "Coastal Beach Resort",
-    description:
-      "A modern and responsive web platform designed to showcase resort accommodations, services, and activities. Offers a smooth booking experience, stunning visuals, and an elegant interface that captures the serene beauty of coastal living.",
-    image: "/cbr.png",
-    technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
-    liveUrl: "https://www.coastalbeach.co.za/",
-    githubUrl: "https://github.com/erisndev/Coastal-Beach-Resort",
-    category: "Full Stack",
-    color: "#06b6d4",
-  },
-  {
-    id: 8,
-    title: "KNM Bursary System",
-    description:
-      "A bursary management system featuring student applications, profile management, and a responsive dashboard interface for administrators.",
-    image: "/knm.png",
-    technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
-    liveUrl: "https://kn-m-bursary-management-system.vercel.app/",
-    githubUrl: "https://github.com/erisndev/KnM-Bursary-Management-System",
-    category: "Full Stack",
-    color: "#34d399",
-  },
-  {
-    id: 9,
     title: "Chat Application",
     description:
       "A real-time MERN stack chat application with user authentication, message notifications, and online status. Built with Socket.io for instant communication and an intuitive UI.",
@@ -128,7 +44,103 @@ const projects = [
     color: "#a78bfa",
   },
   {
+    id: 3,
+    title: "CVLens AI CV Analyzer",
+    description:
+      "A full-stack AI-powered CV analyzer that helps users evaluate and improve their resumes with intelligent feedback, modern UI, and seamless user experience.",
+    image: "/cvlens.png",
+    technologies: ["React", "Tailwind CSS", "Zustand", "Puter.js"],
+    liveUrl: "https://cvlens-ai-cv-analyzer.vercel.app/",
+    githubUrl: "https://github.com/FerdinandMorena/ai-cv-analyzer",
+    category: "Full Stack",
+    color: "#06b6d4",
+  },
+  {
+    id: 4,
+    title: "KNM Bursary System",
+    description:
+      "A bursary management system featuring student applications, profile management, and a responsive dashboard interface for administrators.",
+    image: "/knm.png",
+    technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
+    liveUrl: "https://kn-m-bursary-management-system.vercel.app/",
+    githubUrl: "https://github.com/erisndev/KnM-Bursary-Management-System",
+    category: "Full Stack",
+    color: "#34d399",
+  },
+  {
+    id: 5,
+    title: "SCDP",
+    description:
+      "A professional corporate website for SCDP, featuring a clean modern design, responsive layout, and informative sections to showcase the company's services and brand identity.",
+    image: "/scdp.png",
+    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
+    liveUrl: "https://scdp.co.za/",
+    githubUrl: "",
+    category: "Frontend",
+    color: "#06b6d4",
+  },
+  {
+    id: 6,
+    title: "Joe's Plumbing",
+    description:
+      "A professional service website for a plumbing business, featuring service listings, contact information, and a clean design that builds trust and drives customer inquiries.",
+    image: "/joe.png",
+    technologies: ["React", "CSS", "JavaScript", "Vercel"],
+    liveUrl: "https://joe-s-plumbing.vercel.app/",
+    githubUrl: "",
+    category: "Frontend",
+    color: "#fbbf24",
+  },
+  {
+    id: 7,
+    title: "GetThru",
+    description:
+      "A sleek and engaging frontend website for GetThru, designed to deliver a compelling user experience with modern UI patterns, smooth interactions, and a fully responsive layout.",
+    image: "/gett.png",
+    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
+    liveUrl: "https://getthru.co.za/",
+    githubUrl: "",
+    category: "Frontend",
+    color: "#34d399",
+  },
+  {
+    id: 8,
+    title: "TechnoRain",
+    description:
+      "A modern corporate website for TechnoRain, showcasing technology solutions and services with a professional design, intuitive navigation, and responsive layout across all devices.",
+    image: "/techno.png",
+    technologies: ["React", "Tailwind CSS", "JavaScript", "Responsive Design"],
+    liveUrl: "https://www.technorain.co.za/",
+    githubUrl: "",
+    category: "Frontend",
+    color: "#a78bfa",
+  },
+  {
+    id: 9,
+    title: "Amantungwa",
+    description:
+      "A professional WordPress website for Amantungwa, featuring an elegant design that highlights the organization's mission, services, and community impact. Built with a user-friendly layout, responsive design, and easy content management.",
+    image: "/aman.png",
+    technologies: ["WordPress", "PHP", "MySQL", "CSS"],
+    liveUrl: "https://amantungwa.co.za/",
+    githubUrl: "",
+    category: "WordPress",
+    color: "#f97316",
+  },
+  {
     id: 10,
+    title: "Coastal Beach Resort",
+    description:
+      "A modern and responsive web platform designed to showcase resort accommodations, services, and activities. Offers a smooth booking experience, stunning visuals, and an elegant interface that captures the serene beauty of coastal living.",
+    image: "/cbr.png",
+    technologies: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
+    liveUrl: "https://www.coastalbeach.co.za/",
+    githubUrl: "https://github.com/erisndev/Coastal-Beach-Resort",
+    category: "Full Stack",
+    color: "#06b6d4",
+  },
+  {
+    id: 11,
     title: "X Clone",
     description:
       "A full-stack X clone featuring user authentication, real-time tweets, likes, retweets, comments, profile management, and a dynamic newsfeed.",
@@ -147,7 +159,7 @@ const projects = [
     color: "#f472b6",
   },
   {
-    id: 11,
+    id: 12,
     title: "MERN Product Cart",
     description:
       "A full-stack e-commerce application featuring product listing, cart management, CRUD operations, and a responsive UI.",
@@ -159,7 +171,7 @@ const projects = [
     color: "#fbbf24",
   },
   {
-    id: 12,
+    id: 13,
     title: "Weather App",
     description:
       "A responsive weather application built with vanilla JavaScript. Users can search for real-time weather conditions by city using the OpenWeatherMap API.",
