@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THE BLUEPRINT — design tokens
+   Warm ink neutrals, one drafting-cobalt accent, one warm
+   signal accent used only for CTAs/highlights. No gradients,
+   no neon glow, no pure gray.
+   ============================================================ */
+@theme {
+  /* --- surfaces --- */
+  --color-ink: #0b0c0e;
+  --color-ink-raised: #16171b;
+  --color-ink-line: #232429;
+  --color-paper: #f4f1ea;
+  --color-paper-muted: #eae6db;
+  --color-paper-line: #ddd8ca;
+
+  /* --- accents --- */
+  --color-blueprint: #3d5afb;
+  --color-blueprint-soft: #7c8fff;
+  --color-blueprint-dim: #26339c;
+  --color-signal: #ff7a33;
+  --color-signal-soft: #ffa579;
+
+  /* --- warm neutral scale --- */
+  --color-mist-100: #f4f1ea;
+  --color-mist-200: #ddd8ca;
+  --color-mist-300: #c8c4ba;
+  --color-mist-400: #a8a49a;
+  --color-mist-500: #8a867e;
+  --color-mist-600: #6b6862;
+  --color-mist-700: #4a473f;
+  --color-mist-800: #2c2b28;
+  --color-mist-900: #1c1c1f;
+
+  /* --- text on ink --- */
+  --color-text: #f4f1ea;
+  --color-text-secondary: #c9c5ba;
+  --color-text-tertiary: #7c7970;
+
+  /* --- text on paper --- */
+  --color-text-inverse: #0b0c0e;
+  --color-text-inverse-secondary: #4a473f;
+  --color-text-inverse-tertiary: #8a867e;
+
+  /* --- typography --- */
+  --font-display: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  --text-display-xl: clamp(3rem, 4vw + 2rem, 7.5rem);
+  --text-display-lg: clamp(2.5rem, 3vw + 1.75rem, 5.5rem);
+  --text-display-md: clamp(2rem, 2vw + 1.25rem, 3.5rem);
+  --text-display-sm: clamp(1.5rem, 1.2vw + 1rem, 2.25rem);
+
+  /* --- motion --- */
+  --ease-draft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* --- radius: sharp, architectural, minimal --- */
+  --radius-hairline: 1px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* --- grid --- */
+  --grid-cell: 64px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-ink);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blueprint);
+  outline-offset: 3px;
+}
+
+::selection {
+  background-color: var(--color-blueprint);
+  color: var(--color-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-line);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-mist-700);
+}
+
+/* ============================================================
+   Blueprint motif utilities
+   ============================================================ */
+
+/* thin cobalt schematic grid, used as a decorative background layer */
+.bp-grid {
+  background-image:
+    linear-gradient(var(--color-ink-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-ink-line) 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
+}
+
+.bp-grid-paper {
+  background-image:
+    linear-gradient(var(--color-paper-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-paper-line) 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
+}
+
+/* annotation label — the recurring FIG./REV. tag language.
+   Deliberately unstyled for color: set text-* on each usage so
+   Tailwind's hover/state utilities (in @layer utilities) can win
+   the cascade against this unlayered rule. */
+.bp-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bp-hairline {
+  height: 1px;
+  background: var(--color-ink-line);
+}
+
+.bp-hairline-paper {
+  height: 1px;
+  background: var(--color-paper-line);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
