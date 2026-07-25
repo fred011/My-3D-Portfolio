@@ -31,3 +31,6 @@ next-env.d.ts
 
 
 .env
+.kombai
+.claude
+.qodo
