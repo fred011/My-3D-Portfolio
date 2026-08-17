@@ -20,19 +20,27 @@ export function Hero() {
     () => {
       if (!sectionRef.current) return;
 
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
       // Base "at rest" state — dimmed, desaturated, slightly zoomed.
       // Every element stays fully present here; scroll only refines it,
       // it never gates whether content is visible at all.
-      gsap.set(scaleRef.current, { scale: 1.1, filter: "grayscale(0.3) brightness(0.85)" });
+      gsap.set(scaleRef.current, {
+        scale: 1.1,
+        filter: "grayscale(0.3) brightness(0.85)",
+      });
       gsap.set(scrimRef.current, { opacity: 0.3 });
       gsap.set(cornerRef.current, { opacity: 0 });
       gsap.set(headlineRef.current, { y: 24 });
       gsap.set(subRef.current, { y: 16, opacity: 0.6 });
 
       if (reducedMotion) {
-        gsap.set(scaleRef.current, { scale: 1, filter: "grayscale(0) brightness(1)" });
+        gsap.set(scaleRef.current, {
+          scale: 1,
+          filter: "grayscale(0) brightness(1)",
+        });
         gsap.set(scrimRef.current, { opacity: 0.22 });
         gsap.set(cornerRef.current, { opacity: 1 });
         gsap.set(headlineRef.current, { y: 0 });
@@ -55,13 +63,30 @@ export function Hero() {
         .to(gridRef.current, { opacity: 0.08, duration: 1.2 }, 0)
         .to(
           scaleRef.current,
-          { scale: 1, filter: "grayscale(0) brightness(1)", duration: 1.6, ease: "power2.out" },
+          {
+            scale: 1,
+            filter: "grayscale(0) brightness(1)",
+            duration: 1.6,
+            ease: "power2.out",
+          },
           0,
         )
-        .to(scrimRef.current, { opacity: 0.15, duration: 1.2, ease: "power2.out" }, 0.1)
+        .to(
+          scrimRef.current,
+          { opacity: 0.15, duration: 1.2, ease: "power2.out" },
+          0.1,
+        )
         .to(headlineRef.current, { y: 0, duration: 1, ease: "power3.out" }, 0.1)
-        .to(subRef.current, { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, 0.25)
-        .to(parallaxRef.current, { yPercent: -10, duration: 2.4, ease: "none" }, 0)
+        .to(
+          subRef.current,
+          { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+          0.25,
+        )
+        .to(
+          parallaxRef.current,
+          { yPercent: -10, duration: 2.4, ease: "none" },
+          0,
+        )
         .to(scrimRef.current, { opacity: 0.55, duration: 0.6 }, 1.8)
         .to(cornerRef.current, { opacity: 0, duration: 0.4 }, 1.8);
     },
@@ -101,15 +126,22 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-ink from-0% via-ink/85 via-45% to-transparent"
         aria-hidden="true"
       />
-      <div ref={gridRef} className="bp-grid pointer-events-none absolute inset-0 opacity-0" />
+      <div
+        ref={gridRef}
+        className="bp-grid pointer-events-none absolute inset-0 opacity-0"
+      />
 
       <div
         ref={cornerRef}
         className="pointer-events-none absolute inset-5 z-10 hidden md:inset-10 sm:block"
         aria-hidden="true"
       >
-        <span className="bp-tag absolute left-0 top-0 text-blueprint-soft">FIG. 00 — THE STUDIO</span>
-        <span className="bp-tag absolute right-0 top-0 text-blueprint-soft">LIMPOPO, SOUTH AFRICA</span>
+        <span className="bp-tag absolute left-0 top-0 text-blueprint-soft">
+          FIG. 00 — THE STUDIO
+        </span>
+        <span className="bp-tag absolute right-0 top-0 text-blueprint-soft">
+          SOUTH AFRICA
+        </span>
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-20 px-6 pb-16 sm:px-8 md:px-12 md:pb-20 lg:pb-24">
@@ -126,8 +158,9 @@ export function Hero() {
 
           <div ref={subRef} className="mt-8 flex flex-col items-start gap-6">
             <p className="max-w-xl text-lg leading-relaxed text-text-secondary">
-              Ferdinand Mphahle Morena — a full-stack engineer who treats engineering, design,
-              performance, and accessibility as one discipline, not four.
+              Ferdinand Mphahle Morena — a full-stack engineer who treats
+              engineering, design, performance, and accessibility as one
+              discipline, not four.
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <a
