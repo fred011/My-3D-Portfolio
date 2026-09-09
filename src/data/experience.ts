@@ -16,8 +16,8 @@ export const experience: ExperienceEntry[] = [
     title: "Web Developer Intern",
     company: "Erisn Africa",
     location: "Remote",
-    duration: "2024 — Present",
-    current: true,
+    duration: "Sep 2024 — Aug 2026",
+    current: false,
     description:
       "Building full-stack web applications on the MERN stack for clients across multiple industries, from bursary administration systems to hospitality booking platforms.",
     achievements: [
