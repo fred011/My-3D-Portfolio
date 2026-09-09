@@ -33,12 +33,18 @@ export function Experience() {
   );
 
   return (
-    <section id="experience" ref={sectionRef} className="bp-grid-paper relative bg-paper px-6 py-24 md:px-12 md:py-32">
+    <section
+      id="experience"
+      ref={sectionRef}
+      className="bp-grid-paper relative bg-paper px-6 py-24 md:px-12 md:py-32"
+    >
       <div className="bp-hairline-paper absolute inset-x-0 top-0" />
       <div className="mx-auto max-w-[1600px]">
-        <span className="bp-tag mb-6 block text-blueprint-dim">FIG. 09 — REVISION LOG</span>
+        <span className="bp-tag mb-6 block text-blueprint-dim">
+          FIG. 09 — REVISION LOG
+        </span>
         <h2 className="mb-16 max-w-3xl font-display text-display-lg font-semibold leading-[1.02] tracking-tight text-text-inverse md:mb-24">
-          Where the work has happened.
+          A selection of roles and places that have shaped my work.
         </h2>
 
         <div className="border-t border-paper-line">
@@ -51,15 +57,23 @@ export function Experience() {
               className="grid gap-6 border-b border-paper-line py-12 md:grid-cols-[220px_1fr] md:gap-16 md:py-16"
             >
               <div data-reveal>
-                <span className="bp-tag mb-3 block text-text-inverse-tertiary">{entry.rev}</span>
+                <span className="bp-tag mb-3 block text-text-inverse-tertiary">
+                  {entry.rev}
+                </span>
                 <div className="flex items-center gap-2">
-                  <span className={`h-1.5 w-1.5 rounded-full ${entry.current ? "bg-signal" : "bg-mist-400"}`} />
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${entry.current ? "bg-signal" : "bg-mist-400"}`}
+                  />
                   <span className="text-sm text-text-inverse-secondary">
                     {entry.current ? "Current" : "Completed"}
                   </span>
                 </div>
-                <p className="mt-4 font-mono text-sm text-text-inverse-tertiary">{entry.duration}</p>
-                <p className="mt-1 font-mono text-sm text-text-inverse-tertiary">{entry.location}</p>
+                <p className="mt-4 font-mono text-sm text-text-inverse-tertiary">
+                  {entry.duration}
+                </p>
+                <p className="mt-1 font-mono text-sm text-text-inverse-tertiary">
+                  {entry.location}
+                </p>
               </div>
 
               <div>
@@ -67,10 +81,15 @@ export function Experience() {
                   <h3 className="font-display text-2xl font-semibold text-text-inverse md:text-3xl">
                     {entry.title}
                   </h3>
-                  <p className="mt-1 text-lg text-blueprint-dim">{entry.company}</p>
+                  <p className="mt-1 text-lg text-blueprint-dim">
+                    {entry.company}
+                  </p>
                 </div>
 
-                <p data-reveal className="mt-6 max-w-2xl leading-relaxed text-text-inverse-secondary">
+                <p
+                  data-reveal
+                  className="mt-6 max-w-2xl leading-relaxed text-text-inverse-secondary"
+                >
                   {entry.description}
                 </p>
 
